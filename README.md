@@ -160,6 +160,26 @@ content will be wrong, and fixing it must be cheap.
 }
 ```
 
+## Source confidence & auto-promotion
+
+Every step carries a `confidence` level that the UI shows as a badge:
+
+| Level | Meaning |
+|-------|---------|
+| `verified` | Field-verified against an actual office |
+| `official` | Matches an official publication or legal requirement |
+| `community` | Corroborated by multiple community reports |
+| `best_effort` | Written from general knowledge — verify at the office |
+
+Static levels live in the process JSON (`steps[].confidence`). On top of
+that, the API **auto-promotes** a `best_effort` step to `community` once
+**3 approved community reports** exist for its (process, region, step) —
+`PROMOTION_THRESHOLD` in `server/src/processes.js`. This is how the
+reality-check layer upgrades content without anyone editing JSON: the badge
+becomes live evidence instead of a static tag. Promotion is upward-only
+(`official`/`verified` are never downgraded), counts only `approved` reports
+(flagged/hidden don't count), and is region-scoped.
+
 ## What's real vs. seeded placeholder data
 
 **Real (working, not placeholder):**
@@ -170,7 +190,9 @@ content will be wrong, and fixing it must be cheap.
   rejection reasons, region variants — all functional and editable.
 - The demo user's checklist state, sample reports and sample vault document
   are real rows exercising the real flows (the sample PNG is a generated
-  1×1 image, encrypted on disk like any upload).
+  1×1 image, encrypted on disk like any upload). The seeded reports on the
+  trade-license `prepare-lease` step cross the promotion threshold, so the
+  demo visibly shows a `best_effort` step auto-promoted to `community`.
 
 **Seeded placeholder / best-effort (flagged honestly):**
 - **Process content is best-effort reference material**, written from public
@@ -203,6 +225,6 @@ content will be wrong, and fixing it must be cheap.
 ## Tests
 
 ```
-npm test                # server unit tests (12)
+npm test                # server unit tests (18)
 node scripts/browser-smoke.mjs   # full UI flow, needs dev servers + Chrome
 ```

@@ -14,7 +14,7 @@ import { db } from '../db.js';
 import { wrap, ok, badRequest, notFound, conflict } from '../http.js';
 import { authMiddleware } from '../auth.js';
 import { nowIso } from '../crypto.js';
-import { resolveProcess, getProcessRow, isValidRegion } from '../processes.js';
+import { resolveProcess, resolveProcessWithPromotion, getProcessRow, isValidRegion } from '../processes.js';
 
 const router = Router();
 router.use(authMiddleware);
@@ -117,7 +117,8 @@ router.get('/', wrap(async (req, res) => {
 router.get('/:id', wrap(async (req, res) => {
   const cl = await loadChecklist(req.params.id, req.user.id);
   const row = await getProcessRow(cl.process_slug);
-  const process = resolveProcess(row, { region: cl.region, locale: req.query.locale === 'am' ? 'am' : 'en' });
+  // Community promotion applied so step badges reflect live reports.
+  const process = await resolveProcessWithPromotion(row, { region: cl.region, locale: req.query.locale === 'am' ? 'am' : 'en' });
   const [statuses, attachments, reports] = await Promise.all([
     statusesFor(cl.id),
     attachmentsFor(cl.id),

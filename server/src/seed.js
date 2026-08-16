@@ -109,6 +109,8 @@ export async function runSeed() {
     ['trade-license', 'addis_ababa', 'get-tin', 1, 'Bole MoR branch', 0, 'Same-day TIN for individuals.', 15],
     ['trade-license', 'addis_ababa', 'get-tin', 3, 'Central MoR branch', 0, 'Busy month — took 3 days.', 9],
     ['trade-license', 'addis_ababa', 'prepare-lease', 7, 'Notary at Addis Ketema', 0, 'Notary queue was the bottleneck.', 18],
+    ['trade-license', 'addis_ababa', 'prepare-lease', 10, 'Notary at Merkato', 1, 'Landlord\'s tax clearance was waived — brought ID copy only.', 16],
+    ['trade-license', 'addis_ababa', 'prepare-lease', 5, 'Private notary office', 0, 'Private notaries are faster than the court notary queue.', 13],
     ['trade-license', 'addis_ababa', 'submit-application', 14, 'Yeka sub-city', 0, 'Application sat for 2 weeks; follow up in person.', 8],
     ['trade-license', 'addis_ababa', 'pay-and-collect', 3, 'Yeka sub-city', 0, 'Fee paid at CBE, license ready 3 days later.', 6],
     ['business-name', 'addis_ababa', 'check-availability', 0, 'Online registry', 0, 'Checked online from home — no office visit needed.', 25],

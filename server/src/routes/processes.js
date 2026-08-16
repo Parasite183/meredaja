@@ -6,7 +6,7 @@
 // ─────────────────────────────────────────────────────────────────────
 import { Router } from 'express';
 import { wrap, ok } from '../http.js';
-import { listProcesses, resolveProcess, getProcessRow, regionCatalog } from '../processes.js';
+import { listProcesses, resolveProcessWithPromotion, getProcessRow, regionCatalog } from '../processes.js';
 
 const router = Router();
 
@@ -25,7 +25,9 @@ router.get('/processes', wrap(async (req, res) => {
 router.get('/processes/:slug', wrap(async (req, res) => {
   const locale = req.query.locale === 'am' ? 'am' : 'en';
   const row = await getProcessRow(req.params.slug);
-  const process = resolveProcess(row, { region: req.query.region, locale });
+  // Community promotion: best_effort steps with enough approved
+  // reports get upgraded to community based on live data.
+  const process = await resolveProcessWithPromotion(row, { region: req.query.region, locale });
   ok(res, { process });
 }));
 

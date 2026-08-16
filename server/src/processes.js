@@ -110,6 +110,15 @@ function pick(content, locale) {
  */
 const CONFIDENCE_LEVELS = ['verified', 'official', 'community', 'best_effort'];
 
+/**
+ * A step whose static confidence is best_effort gets auto-promoted to
+ * community once this many APPROVED community reports exist for its
+ * (process, region, step). The community layer is the product's
+ * reality-check mechanism — this is how best-effort content earns a
+ * badge upgrade without an editor touching the JSON.
+ */
+export const PROMOTION_THRESHOLD = 3;
+
 export function isValidConfidence(c) {
   return CONFIDENCE_LEVELS.includes(c);
 }
@@ -140,6 +149,32 @@ export function regionCatalog() {
 
 export function isValidRegion(region) {
   return !!regionCatalog()[region];
+}
+
+/**
+ * Resolve a process row with community promotion applied: any step
+ * tagged best_effort that has >= PROMOTION_THRESHOLD approved reports
+ * for this (process, region) is upgraded to community. official/
+ * verified steps are never downgraded — the scale is upward-only.
+ */
+export async function resolveProcessWithPromotion(row, { region, locale = 'en' } = {}) {
+  const data = JSON.parse(row.data_json);
+  const chosenRegion = region || data.default_region || 'addis_ababa';
+  const counts = await db.all(
+    `SELECT step_key, COUNT(*) AS n
+     FROM step_reports
+     WHERE process_slug = ? AND region = ? AND moderation_status = 'approved'
+     GROUP BY step_key`,
+    [data.slug, chosenRegion]
+  );
+  const reportCounts = Object.fromEntries(counts.map((c) => [c.step_key, c.n]));
+  const process = resolveProcess(row, { region: chosenRegion, locale });
+  for (const step of process.steps) {
+    if (step.confidence === 'best_effort' && (reportCounts[step.key] || 0) >= PROMOTION_THRESHOLD) {
+      step.confidence = 'community';
+    }
+  }
+  return process;
 }
 
 /**
