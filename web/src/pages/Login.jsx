@@ -108,12 +108,10 @@ export default function Login() {
               <button type="submit" className="btn btn-primary btn-block" disabled={busy || code.length !== 6}>
                 {busy ? t('common.loading') : t('common.verify')}
               </button>
-              {isDev ? (
-                {isDevHost && (
-                  <button type="button" className="btn btn-secondary btn-sm btn-block" onClick={devFill}>
-                    {t('otp.devFill')}
-                  </button>
-                )}
+              {isDev && isDevHost ? (
+                <button type="button" className="btn btn-secondary btn-sm btn-block" onClick={devFill}>
+                  {t('otp.devFill')}
+                </button>
               ) : null}
               <button type="button" className="btn btn-ghost btn-sm btn-block" onClick={() => { setStep('phone'); setCode(''); setError(''); }}>
                 {t('otp.resend')}
