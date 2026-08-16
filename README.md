@@ -21,6 +21,32 @@ Then open **http://localhost:5173** and sign in with the demo phone
 `+251911000001` — the OTP is printed in the server console (or use the
 "Dev: autofill code" button).
 
+## Live deployment
+
+| What | URL |
+|------|-----|
+| Web app | **https://meredaja.pages.dev** |
+| API worker | **https://meredaja-api.183georgedaniel.workers.dev** |
+| Repository | **https://github.com/Parasite183/meredaja** |
+
+The live backend runs on **Cloudflare Workers** (D1 for storage, R2 for
+encrypted documents) with real SMS via **Africa's Talking** (sandbox
+credentials). **Every push to `main` auto-deploys** — GitHub Actions runs the
+tests, deploys the API worker, builds + deploys the web app to Pages, and
+syncs the process library to D1 (see `.github/workflows/deploy.yml`).
+
+Repo secrets (set once via `gh secret set`): `CLOUDFLARE_API_TOKEN` and
+`CLOUDFLARE_ACCOUNT_ID`. Worker secrets (`JWT_SECRET`, `MEREDAJA_ENC_KEY`,
+`AFRICASTALKING_*`) are set via `wrangler secret put` and persist across
+deploys.
+
+> **Sandbox SMS note:** the live OTP codes are sent to the Africa's Talking
+> sandbox (they appear in your AT dashboard, not on a real phone). To read
+> a code during development, the demo user's latest code is in the `otp_codes`
+> table — `npx wrangler d1 execute meredaja-db --remote --command "SELECT code
+> FROM otp_codes ORDER BY id DESC LIMIT 1;"`. Switch to live AT credentials
+> (and real sender ID) when ready for real delivery.
+
 ## Stack
 
 | Layer    | Choice |
@@ -170,9 +196,9 @@ content will be wrong, and fixing it must be cheap.
   (`MEREDAJA_ENC_KEY`); production refuses to boot without a real key.
 - SQLite is the default; `DATABASE_URL=postgres://…` switches the same code
   to PostgreSQL (SQL stays in the common dialect).
-- SMS is a console stub in dev (`SMS_PROVIDER=console`); Twilio and
-  Africa's Talking providers exist but need credentials, and production
-  rejects the console stub.
+- SMS is a console stub in dev (`SMS_PROVIDER=console`); production uses
+  Africa's Talking (sandbox credentials at the moment) and refuses to boot
+  with the console stub or with missing provider credentials.
 
 ## Tests
 
