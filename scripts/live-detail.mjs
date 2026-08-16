@@ -99,19 +99,50 @@ try {
   await page.screenshot({ path: `${SHOTS}/3-process-detail.png` });
 
   // ── Region switch to Bahir Dar ─────────────────────────────────────
-  const bIdx = await findButton(page, 'Bahir Dar');
-  if (bIdx >= 0) {
-    const bs = await page.$$('button');
-    await bs[bIdx].click();
-    await new Promise((r) => setTimeout(r, 1500));
-    body = await page.evaluate(() => document.body.innerText);
-    console.log('region switch → Amhara office:', /Amhara Region Trade Bureau/.test(body));
-    await page.screenshot({ path: `${SHOTS}/3b-region-bahir.png` });
-  } else {
-    console.log('region switch → Bahir Dar chip NOT FOUND');
-  }
+  // Click via page.evaluate (index-based element clicks can race the
+  // re-render) and wait for the re-fetch before checking the office.
+  const clicked = await page.evaluate(() => {
+    const b = [...document.querySelectorAll('button')].find((x) => x.innerText.trim() === 'Bahir Dar');
+    if (!b) return false;
+    b.click();
+    return true;
+  });
+  await new Promise((r) => setTimeout(r, 2500));
+  body = await page.evaluate(() => document.body.innerText);
+  console.log('region switch → Amhara office:', clicked && /Amhara Region Trade Bureau, Bahir Dar branch/.test(body));
+  await page.screenshot({ path: `${SHOTS}/3b-region-bahir.png` });
 
-  // ── Amharic toggle ─────────────────────────────────────────────────
+  // ── Checklist ──────────────────────────────────────────────────────
+  await page.goto(`${BASE}/checklists/1`, { waitUntil: 'networkidle0' });
+  await new Promise((r) => setTimeout(r, 1200));
+  body = await page.evaluate(() => document.body.innerText);
+  console.log('checklist shows progress:', /\d\/\d steps/.test(body));
+  // The note placeholder lives in the textarea's placeholder attribute,
+  // which innerText never includes — read it directly.
+  const notePh = await page.$$eval('textarea', (ts) => ts.map((t) => t.placeholder)).catch(() => []);
+  console.log('checklist has note field:', notePh.some((p) => /Note for this step/.test(p)));
+  console.log('checklist shows vault attachment:', /sample-address-proof|Attach from vault/.test(body));
+  await page.screenshot({ path: `${SHOTS}/5-checklist.png` });
+
+  // ── Vault ──────────────────────────────────────────────────────────
+  await page.goto(`${BASE}/vault`, { waitUntil: 'networkidle0' });
+  await new Promise((r) => setTimeout(r, 1200));
+  body = await page.evaluate(() => document.body.innerText);
+  console.log('vault shows document:', /sample-address-proof\.png/.test(body));
+  console.log('vault shows attached-to count:', /attached to 2 steps/.test(body));
+  console.log('vault shows encrypted tag:', /Encrypted at rest/.test(body));
+  await page.screenshot({ path: `${SHOTS}/6-vault.png` });
+
+  // ── Moderation ─────────────────────────────────────────────────────
+  await page.goto(`${BASE}/moderation`, { waitUntil: 'networkidle0' });
+  await new Promise((r) => setTimeout(r, 1200));
+  body = await page.evaluate(() => document.body.innerText);
+  // Headings are CSS-uppercased, so compare case-insensitively.
+  console.log('moderation shows verified steps:', /Verified steps/i.test(body));
+  console.log('moderation shows history:', /Verification history/i.test(body));
+  await page.screenshot({ path: `${SHOTS}/7-moderation.png` });
+
+  // ── Amharic toggle (last — everything above expects English) ───────
   await page.goto(`${BASE}/settings`, { waitUntil: 'networkidle0' });
   await new Promise((r) => setTimeout(r, 1200));
   const amIdx = await findButton(page, 'አማርኛ');
@@ -127,30 +158,6 @@ try {
   } else {
     console.log('Amharic button NOT FOUND');
   }
-
-  // ── Checklist ──────────────────────────────────────────────────────
-  await page.goto(`${BASE}/checklists/1`, { waitUntil: 'networkidle0' });
-  await new Promise((r) => setTimeout(r, 1200));
-  body = await page.evaluate(() => document.body.innerText);
-  console.log('checklist shows progress:', /\d\/\d steps/.test(body));
-  console.log('checklist has note field:', /Note for this step/.test(body));
-  await page.screenshot({ path: `${SHOTS}/5-checklist.png` });
-
-  // ── Vault ──────────────────────────────────────────────────────────
-  await page.goto(`${BASE}/vault`, { waitUntil: 'networkidle0' });
-  await new Promise((r) => setTimeout(r, 1200));
-  body = await page.evaluate(() => document.body.innerText);
-  console.log('vault shows document:', /sample-address-proof|address proof/i.test(body));
-  console.log('vault shows encrypted tag:', /Encrypted at rest/.test(body));
-  await page.screenshot({ path: `${SHOTS}/6-vault.png` });
-
-  // ── Moderation ─────────────────────────────────────────────────────
-  await page.goto(`${BASE}/moderation`, { waitUntil: 'networkidle0' });
-  await new Promise((r) => setTimeout(r, 1200));
-  body = await page.evaluate(() => document.body.innerText);
-  console.log('moderation shows verified steps:', /Verified steps/.test(body));
-  console.log('moderation shows history:', /Verification history/.test(body));
-  await page.screenshot({ path: `${SHOTS}/7-moderation.png` });
 
   console.log('\nscreenshots saved to', SHOTS);
 } finally {
