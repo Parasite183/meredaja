@@ -189,11 +189,14 @@ upward-only (`official`/`verified` are never downgraded), counts only
 Moderators drive the final step from the **Moderation page**: a "Verified
 steps" section lists every community-promoted step, and a moderator who
 confirms it on the ground clicks **Mark verified** (or **Undo verification**
-for a mistake). Every action is recorded in `step_verification_log` and
-visible in the collapsible **Verification history** on the same page — who
-did what, on which step, and when (via `/api/moderation/verifications`).
-The loop is complete: best-effort → community (earned via reports) →
-verified (confirmed by a human), with a full audit trail.
+for a mistake). Moderators can attach a short **note** recording exactly
+what they confirmed ("the lease desk requires a notarized copy"), shown on
+the verified step and preserved in the audit trail. Every action is
+recorded in `step_verification_log` and visible in the collapsible
+**Verification history** on the same page — who did what, on which step,
+when, and why (via `/api/moderation/verifications`). The loop is complete:
+best-effort → community (earned via reports) → verified (confirmed by a
+human), with a full audit trail.
 
 ## What's real vs. seeded placeholder data
 
@@ -240,6 +243,6 @@ verified (confirmed by a human), with a full audit trail.
 ## Tests
 
 ```
-npm test                # server unit tests (23)
+npm test                # server unit tests (24)
 node scripts/browser-smoke.mjs   # full UI flow, needs dev servers + Chrome
 ```

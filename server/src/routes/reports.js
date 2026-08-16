@@ -139,7 +139,7 @@ router.get('/moderation/steps', authMiddleware, requireModerator, wrap(async (re
            GROUP BY step_key`,
           [p.slug, region]
         ),
-        db.all('SELECT step_key, verified_by, created_at FROM step_verifications WHERE process_slug = ? AND region = ?', [p.slug, region]),
+        db.all('SELECT step_key, verified_by, note, created_at FROM step_verifications WHERE process_slug = ? AND region = ?', [p.slug, region]),
       ]);
       const reportCounts = Object.fromEntries(counts.map((c) => [c.step_key, c.n]));
       const verified = Object.fromEntries(verifications.map((v) => [v.step_key, v]));
@@ -157,6 +157,7 @@ router.get('/moderation/steps', authMiddleware, requireModerator, wrap(async (re
           report_count: reportCounts[step.key] || 0,
           confidence: isVerified ? 'verified' : 'community',
           verified_at: verified[step.key]?.created_at || null,
+          verification_note: verified[step.key]?.note || '',
         });
       }
     }
@@ -177,19 +178,23 @@ router.post('/moderation/steps/verify', authMiddleware, requireModerator, wrap(a
   const process = resolveProcess(row, { region, locale: 'en' });
   if (!process.steps.some((s) => s.key === stepKey)) throw badRequest('Unknown step for this process', 'step_unknown');
 
+  // Optional note: what the moderator actually confirmed on the ground.
+  const note = String(req.body?.note ?? '').trim().slice(0, 500);
+
   await db.run(
-    `INSERT INTO step_verifications (process_slug, region, step_key, verified_by, created_at)
-     VALUES (?, ?, ?, ?, ?)
-     ON CONFLICT(process_slug, region, step_key) DO UPDATE SET verified_by = excluded.verified_by`,
-    [slug, region, stepKey, req.user.id, nowIso()]
+    `INSERT INTO step_verifications (process_slug, region, step_key, verified_by, note, created_at)
+     VALUES (?, ?, ?, ?, ?, ?)
+     ON CONFLICT(process_slug, region, step_key) DO UPDATE SET
+       verified_by = excluded.verified_by, note = excluded.note`,
+    [slug, region, stepKey, req.user.id, note, nowIso()]
   );
-  // Audit: every verify action is logged (who, what, when).
+  // Audit: every verify action is logged (who, what, when, and why).
   await db.run(
-    `INSERT INTO step_verification_log (process_slug, region, step_key, action, actor_id, created_at)
-     VALUES (?, ?, ?, 'verify', ?, ?)`,
-    [slug, region, stepKey, req.user.id, nowIso()]
+    `INSERT INTO step_verification_log (process_slug, region, step_key, action, actor_id, note, created_at)
+     VALUES (?, ?, ?, 'verify', ?, ?, ?)`,
+    [slug, region, stepKey, req.user.id, note, nowIso()]
   );
-  ok(res, { verified: { process_slug: slug, region, step_key: stepKey } }, 201);
+  ok(res, { verified: { process_slug: slug, region, step_key: stepKey, note } }, 201);
 }));
 
 /** Undo a verification. */
@@ -213,7 +218,7 @@ router.delete('/moderation/steps/verify', authMiddleware, requireModerator, wrap
  */
 router.get('/moderation/verifications', authMiddleware, requireModerator, wrap(async (req, res) => {
   const rows = await db.all(
-    `SELECT l.id, l.process_slug, l.region, l.step_key, l.action, l.created_at,
+    `SELECT l.id, l.process_slug, l.region, l.step_key, l.action, l.note, l.created_at,
             u.phone AS actor_phone
      FROM step_verification_log l
      LEFT JOIN users u ON u.id = l.actor_id

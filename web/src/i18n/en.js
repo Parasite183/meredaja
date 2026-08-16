@@ -196,6 +196,9 @@ export default {
   'mod.history.unverify': 'un-verified',
   'mod.history.by': 'by {phone}',
   'mod.history.at': '{action} {step} · {date}',
+  'mod.note': 'What did you confirm?',
+  'mod.notePh': 'e.g. “Confirmed the lease desk requires a notarized copy”',
+  'mod.noteEmpty': 'No note.',
 
   'err.generic': 'Something went wrong. Try again.',
   'err.rate_limited': 'Too many requests — try again shortly.',

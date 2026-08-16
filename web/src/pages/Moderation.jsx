@@ -9,6 +9,8 @@ export default function Moderation() {
   const [reports, setReports] = useState(null);
   const [steps, setSteps] = useState(null);
   const [history, setHistory] = useState(null);
+  // Draft note per candidate step, keyed by process/region/step.
+  const [notes, setNotes] = useState({});
 
   const load = () =>
     Promise.all([
@@ -23,11 +25,18 @@ export default function Moderation() {
     await load();
   }
 
+  const noteKey = (s) => `${s.process_slug}/${s.region}/${s.step_key}`;
+
   async function verify(step, value) {
     if (value) {
       await api('/api/moderation/steps/verify', {
         method: 'POST',
-        body: { process_slug: step.process_slug, region: step.region, step_key: step.step_key },
+        body: {
+          process_slug: step.process_slug,
+          region: step.region,
+          step_key: step.step_key,
+          note: notes[noteKey(step)] || '',
+        },
       });
     } else {
       await api(`/api/moderation/steps/verify?process_slug=${step.process_slug}&region=${step.region}&step_key=${step.step_key}`, { method: 'DELETE' });
@@ -59,7 +68,7 @@ export default function Moderation() {
         ) : (
           <ul className="space-y-3">
             {steps.map((s) => (
-              <li key={`${s.process_slug}/${s.region}/${s.step_key}`} className="card p-4">
+              <li key={noteKey(s)} className="card p-4">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
                     <p className="text-sm font-bold leading-snug">{s.step_title}</p>
@@ -71,20 +80,33 @@ export default function Moderation() {
                   <ConfidenceBadge level={s.confidence} />
                 </div>
                 {s.confidence === 'verified' ? (
-                  <div className="mt-3 flex items-center justify-between gap-2">
-                    <span className="text-xs text-ink-soft">
-                      {s.verified_at ? t('mod.verifiedOn', { date: new Date(s.verified_at).toLocaleDateString() }) : t('mod.verified')}
-                    </span>
-                    <button className="btn btn-secondary btn-sm" onClick={() => verify(s, false)}>
-                      <RotateCcw size={13} />
-                      {t('mod.unverify')}
-                    </button>
+                  <div className="mt-3">
+                    {s.verification_note ? (
+                      <p className="mb-2 rounded-lg bg-ok-soft p-2 text-xs text-ink">“{s.verification_note}”</p>
+                    ) : null}
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs text-ink-soft">
+                        {s.verified_at ? t('mod.verifiedOn', { date: new Date(s.verified_at).toLocaleDateString() }) : t('mod.verified')}
+                      </span>
+                      <button className="btn btn-secondary btn-sm" onClick={() => verify(s, false)}>
+                        <RotateCcw size={13} />
+                        {t('mod.unverify')}
+                      </button>
+                    </div>
                   </div>
                 ) : (
-                  <button className="btn btn-primary btn-sm mt-3 w-full" onClick={() => verify(s, true)}>
-                    <BadgeCheck size={14} />
-                    {t('mod.verify')}
-                  </button>
+                  <div className="mt-3 space-y-2">
+                    <input
+                      className="input text-sm"
+                      placeholder={t('mod.notePh')}
+                      value={notes[noteKey(s)] || ''}
+                      onChange={(e) => setNotes((n) => ({ ...n, [noteKey(s)]: e.target.value }))}
+                    />
+                    <button className="btn btn-primary btn-sm w-full" onClick={() => verify(s, true)}>
+                      <BadgeCheck size={14} />
+                      {t('mod.verify')}
+                    </button>
+                  </div>
                 )}
               </li>
             ))}
@@ -105,16 +127,23 @@ export default function Moderation() {
           ) : (
             <ul className="mt-2 max-h-64 space-y-1 overflow-y-auto text-xs text-ink">
               {history.map((e) => (
-                <li key={e.id} className="flex items-center justify-between gap-2 border-b border-line/60 pb-1">
-                  <span>
-                    <span className={e.action === 'verify' ? 'font-semibold text-ok' : 'font-semibold text-bad'}>
-                      {e.action === 'verify' ? t('mod.history.verify') : t('mod.history.unverify')}
-                    </span>{' '}
-                    <span className="font-medium">{e.process_slug}/{e.region}/{e.step_key}</span>
-                  </span>
-                  <span className="shrink-0 text-ink-soft">
-                    {t('mod.history.by', { phone: e.actor_phone })} · {new Date(e.created_at).toLocaleString()}
-                  </span>
+                <li key={e.id} className="border-b border-line/60 pb-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <span>
+                      <span className={e.action === 'verify' ? 'font-semibold text-ok' : 'font-semibold text-bad'}>
+                        {e.action === 'verify' ? t('mod.history.verify') : t('mod.history.unverify')}
+                      </span>{' '}
+                      <span className="font-medium">{e.process_slug}/{e.region}/{e.step_key}</span>
+                    </span>
+                    <span className="shrink-0 text-ink-soft">
+                      {t('mod.history.by', { phone: e.actor_phone })} · {new Date(e.created_at).toLocaleString()}
+                    </span>
+                  </div>
+                  {e.note ? (
+                    <p className="mt-0.5 text-xs text-ink-soft">“{e.note}”</p>
+                  ) : (
+                    <p className="mt-0.5 text-[11px] italic text-ink-soft/70">{t('mod.noteEmpty')}</p>
+                  )}
                 </li>
               ))}
             </ul>

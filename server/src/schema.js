@@ -140,6 +140,7 @@ const TABLES = (idCol) => [
     region TEXT NOT NULL,
     step_key TEXT NOT NULL,
     verified_by INTEGER NOT NULL,
+    note TEXT DEFAULT '',                        -- what the moderator confirmed
     created_at TEXT NOT NULL,
     UNIQUE(process_slug, region, step_key)
   )`,
@@ -154,6 +155,7 @@ const TABLES = (idCol) => [
     step_key TEXT NOT NULL,
     action TEXT NOT NULL,                          -- verify | unverify
     actor_id INTEGER NOT NULL,
+    note TEXT DEFAULT '',                        -- note recorded at action time
     created_at TEXT NOT NULL
   )`,
 ];
@@ -184,6 +186,7 @@ export async function initSchema() {
   for (const sql of indexes) await db.run(sql);
   await migrateDeletionColumn();
   await migrateProcessesUnique();
+  await migrateVerificationNotes();
 }
 
 /** DBs created before account deletion existed need users.deleted_at. */
@@ -217,4 +220,23 @@ async function migrateProcessesUnique() {
   await db.run(`INSERT INTO processes (id, slug, category, version, data_json, created_at, updated_at)
                 SELECT id, slug, category, version, data_json, created_at, updated_at FROM processes_old`);
   await db.run('DROP TABLE processes_old');
+}
+
+/**
+ * step_verifications / step_verification_log gained a `note` column
+ * after launch — add it to DBs created before the change (matching the
+ * migrateDeletionColumn pattern).
+ */
+async function migrateVerificationNotes() {
+  if (db.dialect === 'pg') {
+    await db.run('ALTER TABLE step_verifications ADD COLUMN IF NOT EXISTS note TEXT DEFAULT \'\'');
+    await db.run('ALTER TABLE step_verification_log ADD COLUMN IF NOT EXISTS note TEXT DEFAULT \'\'');
+    return;
+  }
+  for (const table of ['step_verifications', 'step_verification_log']) {
+    const cols = await db.all(`SELECT name FROM pragma_table_info('${table}')`);
+    if (cols.length && !cols.some((c) => c.name === 'note')) {
+      await db.run(`ALTER TABLE ${table} ADD COLUMN note TEXT DEFAULT ''`);
+    }
+  }
 }

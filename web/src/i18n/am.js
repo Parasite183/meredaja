@@ -195,6 +195,9 @@ export default {
   'mod.history.unverify': 'አረጋግጦ ቀልቧል',
   'mod.history.by': 'በ{phone}',
   'mod.history.at': '{action} {step} · {date}',
+  'mod.note': 'ምን አረጋገጡ?',
+  'mod.notePh': 'ለምሳሌ: “የኪራይ ዴስክ የተረጋገጠ ቅጂ እንደሚፈልግ ተረጋግጧል”',
+  'mod.noteEmpty': 'ማስታወሻ የለም።',
 
   'err.generic': 'አንድ ነገር ተሳስቷል። እንደገና ይሞክሩ።',
   'err.rate_limited': 'በጣም ብዙ ጥያቄዎች — በቅርቡ እንደገና ይሞክሩ።',

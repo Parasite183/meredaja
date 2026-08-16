@@ -187,6 +187,31 @@ test('verify and unverify actions are logged with actor and timestamp', async ()
   assert.equal(p.steps.find((s) => s.key === 'collect-certificate').confidence, 'best_effort');
 });
 
+test('verification note is stored on current state and audit log', async () => {
+  const actorId = 44;
+  const note = 'Confirmed the lease desk requires a notarized copy';
+  await db.run(
+    `INSERT INTO step_verifications (process_slug, region, step_key, verified_by, note, created_at)
+     VALUES ('trade-license', 'addis_ababa', 'pay-and-collect', ?, ?, ?)`,
+    [actorId, note, new Date().toISOString()]
+  );
+  await db.run(
+    `INSERT INTO step_verification_log (process_slug, region, step_key, action, actor_id, note, created_at)
+     VALUES ('trade-license', 'addis_ababa', 'pay-and-collect', 'verify', ?, ?, ?)`,
+    [actorId, note, new Date().toISOString()]
+  );
+
+  const current = await db.get(
+    "SELECT note FROM step_verifications WHERE process_slug = 'trade-license' AND step_key = 'pay-and-collect'"
+  );
+  assert.equal(current.note, note);
+
+  const log = await db.get(
+    "SELECT note FROM step_verification_log WHERE process_slug = 'trade-license' AND step_key = 'pay-and-collect' AND action = 'verify'"
+  );
+  assert.equal(log.note, note);
+});
+
 test('verification log keeps history across repeated actions', async () => {
   const actorId = 43;
   for (let i = 0; i < 3; i++) {
