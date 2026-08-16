@@ -1,6 +1,6 @@
 {
   "slug": "construction-permit",
-  "version": 1,
+  "version": 2,
   "category": "license",
   "name": {
     "en": "Construction / Building Permit",
@@ -207,6 +207,74 @@
         },
         "pay-and-collect": {
           "responsible_office": { "en": "Hawassa City construction permit office" }
+        }
+      }
+    },
+    "mekelle": {
+      "notes": {
+        "en": "Handled by the Tigray Region / Mekelle City construction permit office. Land title checks may take longer — confirm your plot's status before drafting.",
+        "am": "በትግራይ ክልል / መቀሌ ከተማ የግንባታ ፈቃድ ጽህፈት ቤት ይከናወናል።"
+      },
+      "step_overrides": {
+        "confirm-land-title": {
+          "responsible_office": { "en": "Mekelle City land administration office" }
+        },
+        "submit-application": {
+          "responsible_office": { "en": "Mekelle City construction permit office" }
+        },
+        "pay-and-collect": {
+          "responsible_office": { "en": "Mekelle City construction permit office" }
+        }
+      }
+    },
+    "jimma": {
+      "notes": {
+        "en": "Handled by the Oromia Region / Jimma City construction permit office. Zoning follows the city's structure plan — check your plot's zone before drafting.",
+        "am": "በኦሮሚያ ክልል / ጅማ ከተማ የግንባታ ፈቃድ ጽህፈት ቤት ይከናወናል።"
+      },
+      "step_overrides": {
+        "confirm-land-title": {
+          "responsible_office": { "en": "Jimma City land administration office" }
+        },
+        "submit-application": {
+          "responsible_office": { "en": "Jimma City construction permit office" }
+        },
+        "pay-and-collect": {
+          "responsible_office": { "en": "Jimma City construction permit office" }
+        }
+      }
+    },
+    "gondar": {
+      "notes": {
+        "en": "Handled by the Amhara Region / Gondar City construction permit office. Historic-city heritage rules may add review steps for properties near protected sites.",
+        "am": "በአማራ ክልል / ጎንደር ከተማ የግንባታ ፈቃድ ጽህፈት ቤት ይከናወናል።"
+      },
+      "step_overrides": {
+        "confirm-land-title": {
+          "responsible_office": { "en": "Gondar City land administration office" }
+        },
+        "submit-application": {
+          "responsible_office": { "en": "Gondar City construction permit office" }
+        },
+        "pay-and-collect": {
+          "responsible_office": { "en": "Gondar City construction permit office" }
+        }
+      }
+    },
+    "adama": {
+      "notes": {
+        "en": "Handled by the Oromia Region / Adama City construction permit office. High growth means permit volumes are large — expect longer technical review queues.",
+        "am": "በኦሮሚያ ክልል / አዳማ ከተማ የግንባታ ፈቃድ ጽህፈት ቤት ይከናወናል።"
+      },
+      "step_overrides": {
+        "confirm-land-title": {
+          "responsible_office": { "en": "Adama City land administration office" }
+        },
+        "submit-application": {
+          "responsible_office": { "en": "Adama City construction permit office" }
+        },
+        "pay-and-collect": {
+          "responsible_office": { "en": "Adama City construction permit office" }
         }
       }
     }

@@ -51,9 +51,13 @@ const TABLES = (idCol) => [
   )`,
 
   // Versioned process library (see header comment).
+  // NOTE: only UNIQUE(slug, version) — a slug-only unique column would
+  // make it impossible to insert a second version of the same process,
+  // which is the whole point of versioned content (edit + re-seed,
+  // no redeploy).
   `CREATE TABLE IF NOT EXISTS processes (
     id ${idCol},
-    slug TEXT UNIQUE NOT NULL,
+    slug TEXT NOT NULL,
     category TEXT NOT NULL,                       -- license | tax | name | …
     version INTEGER NOT NULL DEFAULT 1,
     data_json TEXT NOT NULL,                      -- full process definition
@@ -149,6 +153,7 @@ export async function initSchema() {
   for (const sql of tables) await db.run(sql);
   for (const sql of indexes) await db.run(sql);
   await migrateDeletionColumn();
+  await migrateProcessesUnique();
 }
 
 /** DBs created before account deletion existed need users.deleted_at. */
@@ -161,4 +166,25 @@ async function migrateDeletionColumn() {
   if (!cols.some((c) => c.name === 'deleted_at')) {
     await db.run('ALTER TABLE users ADD COLUMN deleted_at TEXT');
   }
+}
+
+/**
+ * DBs created before the versioning fix had `slug TEXT UNIQUE`, which
+ * forbids a second version of the same process (breaking the edit +
+ * re-seed workflow). Rebuild the table without the slug-only unique
+ * column, keeping UNIQUE(slug, version).
+ */
+async function migrateProcessesUnique() {
+  if (db.dialect === 'pg') return; // pg DDL never had the slug UNIQUE column
+  const row = await db.get(`SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'processes'`);
+  if (!row?.sql) return;
+  // Already fixed if the slug column is not declared UNIQUE inline.
+  if (!/slug\s+TEXT\s+UNIQUE/i.test(row.sql)) return;
+  const { tables } = schemaDdl();
+  const createSql = tables.find((t) => t.startsWith('CREATE TABLE IF NOT EXISTS processes'));
+  await db.run('ALTER TABLE processes RENAME TO processes_old');
+  await db.run(createSql);
+  await db.run(`INSERT INTO processes (id, slug, category, version, data_json, created_at, updated_at)
+                SELECT id, slug, category, version, data_json, created_at, updated_at FROM processes_old`);
+  await db.run('DROP TABLE processes_old');
 }

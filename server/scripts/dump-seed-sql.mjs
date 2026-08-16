@@ -63,7 +63,14 @@ async function main() {
   // checklists, and their step reports are never wiped by a re-deploy.
   // sessions / otp_codes are transient and not part of the seed.
   for (const t of ['processes', 'users', 'user_checklists', 'checklist_step_status', 'step_reports']) {
-    const rows = await db.all(`SELECT * FROM ${t} ORDER BY id ASC`);
+    // Seed only the LATEST version of each process — older versions are
+    // history rows that nothing resolves against (lookups use
+    // ORDER BY version DESC LIMIT 1), and shipping them keeps D1 lean
+    // and avoids duplicate-slug inserts against old schemas.
+    const rows =
+      t === 'processes'
+        ? await db.all('SELECT * FROM processes p WHERE version = (SELECT MAX(version) FROM processes WHERE slug = p.slug) ORDER BY id ASC')
+        : await db.all(`SELECT * FROM ${t} ORDER BY id ASC`);
     for (const r of rows) {
       const cols = Object.keys(r);
       const vals = cols.map((c) => literal(r[c])).join(', ');

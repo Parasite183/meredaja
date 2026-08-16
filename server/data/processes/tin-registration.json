@@ -1,6 +1,6 @@
 {
   "slug": "tin-registration",
-  "version": 1,
+  "version": 2,
   "category": "tax",
   "name": {
     "en": "TIN / Tax Registration",
@@ -142,6 +142,39 @@
       "step_overrides": {
         "visit-revenues-office": {
           "responsible_office": { "en": "Ministry of Revenues — Mekelle branch" }
+        }
+      }
+    },
+    "jimma": {
+      "notes": {
+        "en": "Ministry of Revenues Jimma branch serves the surrounding Oromia zones. Queues can be long around tax filing season (June–July).",
+        "am": "የገቢዎች ሚኒስቴር ጅማ ቅርንጫፍ በዙሪያው ያሉትን የኦሮሚያ ዞኖች ያገለግላል።"
+      },
+      "step_overrides": {
+        "visit-revenues-office": {
+          "responsible_office": { "en": "Ministry of Revenues — Jimma branch" }
+        }
+      }
+    },
+    "gondar": {
+      "notes": {
+        "en": "Ministry of Revenues Gondar branch serves the Amhara region's north-west. Same-day issuance is common for individual TINs.",
+        "am": "የገቢዎች ሚኒስቴር ጎንደር ቅርንጫፍ የአማራ ክልልን ሰሜን-ምዕራብ ያገለግላል።"
+      },
+      "step_overrides": {
+        "visit-revenues-office": {
+          "responsible_office": { "en": "Ministry of Revenues — Gondar branch" }
+        }
+      }
+    },
+    "adama": {
+      "notes": {
+        "en": "Ministry of Revenues Adama branch. A busy corridor office — arrive early, as queues build through the morning.",
+        "am": "የገቢዎች ሚኒስቴር አዳማ ቅርንጫፍ። ሰው በበዛበት ቢሮ ነው — ቶሎ ይሂዱ።"
+      },
+      "step_overrides": {
+        "visit-revenues-office": {
+          "responsible_office": { "en": "Ministry of Revenues — Adama branch" }
         }
       }
     }

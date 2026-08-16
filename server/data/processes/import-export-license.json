@@ -1,6 +1,6 @@
 {
   "slug": "import-export-license",
-  "version": 1,
+  "version": 2,
   "category": "license",
   "name": {
     "en": "Import / Export License",
@@ -196,6 +196,50 @@
       "step_overrides": {
         "check-trade-license": {
           "responsible_office": { "en": "Dire Dawa City Trade and Industry Development Office" }
+        }
+      }
+    },
+    "mekelle": {
+      "notes": {
+        "en": "Federal process filed at MoTRI Addis Ababa. Local support: the Tigray Region Trade Bureau in Mekelle can pre-check your file and confirm commodity restrictions before you travel.",
+        "am": "የፌደራል ሂደት በአዲስ አበባ በሚኒስቴሩ ይቀርባል። በመቀሌ የትግራይ ክልል የንግድ ቢሮ ፋይሉን አስቀድሞ ማጣራት ይችላል።"
+      },
+      "step_overrides": {
+        "check-trade-license": {
+          "responsible_office": { "en": "Tigray Region Trade Bureau, Mekelle branch" }
+        }
+      }
+    },
+    "jimma": {
+      "notes": {
+        "en": "Federal process filed at MoTRI Addis Ababa. The Oromia Region Trade Bureau, Jimma branch handles the underlying trade license and can confirm commodity restrictions.",
+        "am": "የፌደራል ሂደት በአዲስ አበባ በሚኒስቴሩ ይቀርባል። በጅማ የኦሮሚያ ክልል የንግድ ቢሮ የንግድ ፈቃዱን ይይዛል።"
+      },
+      "step_overrides": {
+        "check-trade-license": {
+          "responsible_office": { "en": "Oromia Region Trade Bureau, Jimma branch" }
+        }
+      }
+    },
+    "gondar": {
+      "notes": {
+        "en": "Federal process filed at MoTRI Addis Ababa. The Amhara Region Trade Bureau, Gondar branch handles the underlying trade license.",
+        "am": "የፌደራል ሂደት በአዲስ አበባ በሚኒስቴሩ ይቀርባል። በጎንደር የአማራ ክልል የንግድ ቢሮ የንግድ ፈቃዱን ይይዛል።"
+      },
+      "step_overrides": {
+        "check-trade-license": {
+          "responsible_office": { "en": "Amhara Region Trade Bureau, Gondar branch" }
+        }
+      }
+    },
+    "adama": {
+      "notes": {
+        "en": "Federal process filed at MoTRI Addis Ababa. The Oromia Region Trade Bureau, Adama branch handles the underlying trade license; being close to the corridor, Adama firms often use customs clearing agents.",
+        "am": "የፌደራል ሂደት በአዲስ አበባ በሚኒስቴሩ ይቀርባል። በአዳማ የኦሮሚያ ክልል የንግድ ቢሮ የንግድ ፈቃዱን ይይዛል።"
+      },
+      "step_overrides": {
+        "check-trade-license": {
+          "responsible_office": { "en": "Oromia Region Trade Bureau, Adama branch" }
         }
       }
     }

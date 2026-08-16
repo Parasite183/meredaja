@@ -1,6 +1,6 @@
 {
   "slug": "trade-license",
-  "version": 1,
+  "version": 2,
   "category": "license",
   "name": {
     "en": "Business Trade License Registration",
@@ -180,6 +180,74 @@
         },
         "pay-and-collect": {
           "responsible_office": { "en": "Sidama Region Trade Bureau, Hawassa branch" }
+        }
+      }
+    },
+    "mekelle": {
+      "notes": {
+        "en": "Handled by the Tigray Region Trade Bureau in Mekelle. Confirm current operating status before travelling — services may be routed through the regional capital's central office.",
+        "am": "በመቀሌ በትግራይ ክልል የንግድ ቢሮ ይከናወናል። ከመጓዝዎ በፊት የአገልግሎት ሁኔታን ያረጋግጡ።"
+      },
+      "step_overrides": {
+        "register-name": {
+          "responsible_office": { "en": "Ministry of Trade and Regional Integration (federal name registration)" }
+        },
+        "submit-application": {
+          "responsible_office": { "en": "Tigray Region Trade Bureau, Mekelle branch" }
+        },
+        "pay-and-collect": {
+          "responsible_office": { "en": "Tigray Region Trade Bureau, Mekelle branch" }
+        }
+      }
+    },
+    "jimma": {
+      "notes": {
+        "en": "Handled by the Oromia Region Trade Bureau, Jimma branch. Name registration is federal (MoTRI); the local bureau issues the license.",
+        "am": "በጅማ በኦሮሚያ ክልል የንግድ ቢሮ ቅርንጫፍ ይከናወናል።"
+      },
+      "step_overrides": {
+        "register-name": {
+          "responsible_office": { "en": "Ministry of Trade and Regional Integration (federal name registration)" }
+        },
+        "submit-application": {
+          "responsible_office": { "en": "Oromia Region Trade Bureau, Jimma branch" }
+        },
+        "pay-and-collect": {
+          "responsible_office": { "en": "Oromia Region Trade Bureau, Jimma branch" }
+        }
+      }
+    },
+    "gondar": {
+      "notes": {
+        "en": "Handled by the Amhara Region Trade Bureau, Gondar branch. Similar timelines to Bahir Dar; the federal name-registration step applies.",
+        "am": "በጎንደር በአማራ ክልል የንግድ ቢሮ ቅርንጫፍ ይከናወናል።"
+      },
+      "step_overrides": {
+        "register-name": {
+          "responsible_office": { "en": "Ministry of Trade and Regional Integration (federal name registration)" }
+        },
+        "submit-application": {
+          "responsible_office": { "en": "Amhara Region Trade Bureau, Gondar branch" }
+        },
+        "pay-and-collect": {
+          "responsible_office": { "en": "Amhara Region Trade Bureau, Gondar branch" }
+        }
+      }
+    },
+    "adama": {
+      "notes": {
+        "en": "Handled by the Oromia Region Trade Bureau, Adama branch. Adama's location on the Addis–Djibouti corridor means busier trade offices during peak season.",
+        "am": "በአዳማ በኦሮሚያ ክልል የንግድ ቢሮ ቅርንጫፍ ይከናወናል።"
+      },
+      "step_overrides": {
+        "register-name": {
+          "responsible_office": { "en": "Ministry of Trade and Regional Integration (federal name registration)" }
+        },
+        "submit-application": {
+          "responsible_office": { "en": "Oromia Region Trade Bureau, Adama branch" }
+        },
+        "pay-and-collect": {
+          "responsible_office": { "en": "Oromia Region Trade Bureau, Adama branch" }
         }
       }
     }

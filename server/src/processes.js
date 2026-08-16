@@ -161,7 +161,8 @@ export function resolveProcess(row, { region, locale = 'en' } = {}) {
 
 /** Public list for the library page (no step detail). */
 export async function listProcesses(locale = 'en') {
-  const rows = await db.all('SELECT * FROM processes ORDER BY category, id');
+  // Latest version per slug wins the dedup, so order newest first.
+  const rows = await db.all('SELECT * FROM processes ORDER BY category, version DESC, id');
   const seen = new Set();
   const out = [];
   for (const row of rows) {

@@ -1,6 +1,6 @@
 {
   "slug": "business-name",
-  "version": 1,
+  "version": 2,
   "category": "name",
   "name": {
     "en": "Business Name Registration",
@@ -131,6 +131,62 @@
         },
         "collect-certificate": {
           "responsible_office": { "en": "Dire Dawa City Administration Trade Office" }
+        }
+      }
+    },
+    "mekelle": {
+      "notes": {
+        "en": "Handled by the Tigray Region Trade Bureau in Mekelle. Confirm current operating status before travelling.",
+        "am": "በመቀሌ በትግራይ ክልል የንግድ ቢሮ ይከናወናል።"
+      },
+      "step_overrides": {
+        "submit-name-application": {
+          "responsible_office": { "en": "Tigray Region Trade Bureau, Mekelle branch" }
+        },
+        "collect-certificate": {
+          "responsible_office": { "en": "Tigray Region Trade Bureau, Mekelle branch" }
+        }
+      }
+    },
+    "jimma": {
+      "notes": {
+        "en": "Handled by the Oromia Region Trade Bureau, Jimma branch. Name checks run against the federal registry for companies (PLC/SC).",
+        "am": "በጅማ በኦሮሚያ ክልል የንግድ ቢሮ ቅርንጫፍ ይከናወናል።"
+      },
+      "step_overrides": {
+        "submit-name-application": {
+          "responsible_office": { "en": "Oromia Region Trade Bureau, Jimma branch" }
+        },
+        "collect-certificate": {
+          "responsible_office": { "en": "Oromia Region Trade Bureau, Jimma branch" }
+        }
+      }
+    },
+    "gondar": {
+      "notes": {
+        "en": "Handled by the Amhara Region Trade Bureau, Gondar branch.",
+        "am": "በጎንደር በአማራ ክልል የንግድ ቢሮ ቅርንጫፍ ይከናወናል።"
+      },
+      "step_overrides": {
+        "submit-name-application": {
+          "responsible_office": { "en": "Amhara Region Trade Bureau, Gondar branch" }
+        },
+        "collect-certificate": {
+          "responsible_office": { "en": "Amhara Region Trade Bureau, Gondar branch" }
+        }
+      }
+    },
+    "adama": {
+      "notes": {
+        "en": "Handled by the Oromia Region Trade Bureau, Adama branch. Name registration for sole proprietors is local; companies use the federal registry.",
+        "am": "በአዳማ በኦሮሚያ ክልል የንግድ ቢሮ ቅርንጫፍ ይከናወናል።"
+      },
+      "step_overrides": {
+        "submit-name-application": {
+          "responsible_office": { "en": "Oromia Region Trade Bureau, Adama branch" }
+        },
+        "collect-certificate": {
+          "responsible_office": { "en": "Oromia Region Trade Bureau, Adama branch" }
         }
       }
     }
