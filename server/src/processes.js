@@ -39,6 +39,10 @@ import { serverRoot } from './config.js';
 import { db } from './db.js';
 import { nowIso } from './crypto.js';
 import { notFound, badRequest } from './http.js';
+// Bundled by esbuild on Workers (no disk there); plain ESM import on
+// Node 24+. This is the region catalog — static data, never edited at
+// runtime, so importing beats a filesystem read.
+import regionsData from '../data/regions.json' with { type: 'json' };
 
 const PROCESSES_DIR = path.join(serverRoot, 'data', 'processes');
 export const KNOWN_CATEGORIES = ['license', 'tax', 'name', 'other'];
@@ -110,11 +114,9 @@ function resolveStep(step, regionDef, locale) {
   return out;
 }
 
-/** Load region metadata (data/regions.json) for names in both languages. */
+/** Region catalog (data/regions.json, bundled at build time). */
 export function regionCatalog() {
-  const file = path.join(serverRoot, 'data', 'regions.json');
-  if (!fs.existsSync(file)) return {};
-  return JSON.parse(fs.readFileSync(file, 'utf8'));
+  return regionsData;
 }
 
 export function isValidRegion(region) {
