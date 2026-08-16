@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, MapPin, Building2, Clock, FileText, AlertTriangle, Play, CheckCircle2 } from 'lucide-react';
 import { api } from '../api.js';
 import { useI18n } from '../i18n/index.jsx';
-import { Spinner, Badge } from '../components/ui.jsx';
+import { Spinner, Badge, ConfidenceBadge, ConfidenceLegend } from '../components/ui.jsx';
 
 export default function ProcessDetail() {
   const { slug } = useParams();
@@ -119,7 +119,8 @@ export default function ProcessDetail() {
       {/* steps */}
       <div>
         <h2 className="mb-2 text-sm font-bold uppercase tracking-wide text-ink-soft">{t('proc.steps')}</h2>
-        <div className="space-y-3">
+        <ConfidenceLegend />
+        <div className="mt-3 space-y-3">
           {proc.steps.map((step, i) => {
             const sig = state.signals[step.key];
             return (
@@ -129,7 +130,10 @@ export default function ProcessDetail() {
                     {i + 1}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <h3 className="font-bold leading-snug">{step.title}</h3>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h3 className="font-bold leading-snug">{step.title}</h3>
+                      <ConfidenceBadge level={step.confidence} />
+                    </div>
                     {step.description ? <p className="mt-1 text-sm text-ink-soft">{step.description}</p> : null}
                   </div>
                 </div>

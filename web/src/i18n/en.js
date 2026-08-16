@@ -103,6 +103,17 @@ export default {
   'proc.report.list': 'What people actually experienced',
   'proc.report.flag': 'Flag as misleading',
 
+  'conf.title': 'Source confidence',
+  'conf.legend': 'How much to trust this step’s details:',
+  'conf.verified': 'Field-verified',
+  'conf.verified.hint': 'Confirmed against an actual office',
+  'conf.official': 'Official source',
+  'conf.official.hint': 'Matches an official publication or legal requirement',
+  'conf.community': 'Community-backed',
+  'conf.community.hint': 'Corroborated by multiple community reports',
+  'conf.best_effort': 'Best effort',
+  'conf.best_effort.hint': 'Written from general knowledge — verify at the office',
+
   'cl.step.todo': 'Mark done',
   'cl.step.done': 'Completed',
   'cl.note.placeholder': 'Note for this step (dates, desk numbers, what they told you…)',

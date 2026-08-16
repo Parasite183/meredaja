@@ -1,6 +1,6 @@
 {
   "slug": "business-name",
-  "version": 2,
+  "version": 3,
   "category": "name",
   "name": {
     "en": "Business Name Registration",
@@ -14,6 +14,7 @@
   "steps": [
     {
       "key": "check-availability",
+      "confidence": "official",
       "order": 1,
       "title": {
         "en": "Check name availability",
@@ -37,6 +38,7 @@
     },
     {
       "key": "submit-name-application",
+      "confidence": "official",
       "order": 2,
       "title": {
         "en": "Submit the name reservation application",
@@ -62,6 +64,7 @@
     },
     {
       "key": "pay-name-fee",
+      "confidence": "best_effort",
       "order": 3,
       "title": {
         "en": "Pay the registration fee",
@@ -86,6 +89,7 @@
     },
     {
       "key": "collect-certificate",
+      "confidence": "best_effort",
       "order": 4,
       "title": {
         "en": "Collect the name registration certificate",

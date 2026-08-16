@@ -7,7 +7,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { sniffMime, encryptBytes, decryptBytes } from '../src/uploads.js';
-import { loadProcessFiles, resolveProcess, isValidRegion } from '../src/processes.js';
+import { loadProcessFiles, resolveProcess, isValidRegion, isValidConfidence } from '../src/processes.js';
 
 const PNG = Buffer.from(
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
@@ -69,6 +69,13 @@ test('process JSON files are valid: keys unique, steps ordered, regions known', 
     for (const s of p.steps) {
       assert.ok(Number.isFinite(s.order), `${p.slug}/${s.key} missing order`);
       assert.ok(s.title && s.title.en, `${p.slug}/${s.key} missing title`);
+      // Every step must declare a source-confidence level.
+      assert.ok(isValidConfidence(s.confidence), `${p.slug}/${s.key} missing/invalid confidence (got ${s.confidence})`);
+    }
+    // The resolved process must expose the confidence on every step.
+    const resolved = resolveProcess({ slug: p.slug, version: p.version, data_json: JSON.stringify(p), updated_at: new Date().toISOString() }, { region: p.default_region || 'addis_ababa', locale: 'en' });
+    for (const s of resolved.steps) {
+      assert.ok(isValidConfidence(s.confidence), `${p.slug}/${s.key} resolved confidence missing`);
     }
     if (p.regions) {
       for (const region of Object.keys(p.regions)) {

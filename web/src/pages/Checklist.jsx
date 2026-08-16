@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Check, Paperclip, MessageSquarePlus, Upload, Flag, Building2 } from 'lucide-react';
 import { api, uploadFile, useUploadUrl } from '../api.js';
 import { useI18n } from '../i18n/index.jsx';
-import { Spinner, ProgressBar, Badge, Modal } from '../components/ui.jsx';
+import { Spinner, ProgressBar, Badge, Modal, ConfidenceBadge } from '../components/ui.jsx';
 
 function AttachmentThumb({ doc }) {
   const url = useUploadUrl(doc.file_path);
@@ -225,13 +225,16 @@ export default function Checklist() {
                 <Check size={16} strokeWidth={3} />
               </button>
               <div className="min-w-0 flex-1">
-                <div className="flex items-center justify-between gap-2">
+                <div className="flex flex-wrap items-center justify-between gap-2">
                   <h3 className={`font-bold leading-snug ${step.status === 'done' ? 'text-ink-soft line-through' : ''}`}>
                     {i + 1}. {step.title}
                   </h3>
-                  <Badge color={step.status === 'done' ? 'ok' : 'muted'}>
-                    {step.status === 'done' ? t('cl.step.done') : t('cl.step.todo')}
-                  </Badge>
+                  <span className="flex items-center gap-1.5">
+                    <ConfidenceBadge level={step.confidence} />
+                    <Badge color={step.status === 'done' ? 'ok' : 'muted'}>
+                      {step.status === 'done' ? t('cl.step.done') : t('cl.step.todo')}
+                    </Badge>
+                  </span>
                 </div>
                 {step.description ? <p className="mt-1 text-sm text-ink-soft">{step.description}</p> : null}
                 <p className="mt-2 flex items-start gap-1.5 text-xs text-ink-soft">

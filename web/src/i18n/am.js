@@ -102,6 +102,17 @@ export default {
   'proc.report.list': 'ሰዎች በትክክል ያጋጠማቸው',
   'proc.report.flag': 'እንደ አሳሳች ምልክት አድርግ',
 
+  'conf.title': 'የመረጃ አስተማማኝነት',
+  'conf.legend': 'የዚህ እርምጃ ዝርዝር ምን ያህል የሚታመን ነው:',
+  'conf.verified': 'በቦታው የተረጋገጠ',
+  'conf.verified.hint': 'ከትክክለኛ ቢሮ ጋር የተረጋገጠ',
+  'conf.official': 'ኦፊሴላዊ ምንጭ',
+  'conf.official.hint': 'ከኦፊሴላዊ ህትመት ወይም ህጋዊ መስፈርት ጋር ይዛመዳል',
+  'conf.community': 'በማህበረሰብ የተደገፈ',
+  'conf.community.hint': 'በብዙ የማህበረሰብ ሪፖርቶች የተረጋገጠ',
+  'conf.best_effort': 'በተቻለ መጠን',
+  'conf.best_effort.hint': 'ከአጠቃላይ እውቀት የተጻፈ — በቢሮው ያረጋግጡ',
+
   'cl.step.todo': 'ተጠናቋል ምልክት አድርግ',
   'cl.step.done': 'ተጠናቋል',
   'cl.note.placeholder': 'ለዚህ እርምጃ ማስታወሻ (ቀኖች፣ የዴስክ ቁጥር፣ የነገሩዎት…)',

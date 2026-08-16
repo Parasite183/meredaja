@@ -96,9 +96,27 @@ function pick(content, locale) {
   return String(content);
 }
 
-/** Resolve a step's fields, applying region overrides. */
+/**
+ * Resolve a step's fields, applying region overrides.
+ *
+ * `confidence` tells users how much to trust the content for this
+ * step — the README is explicit that most content is best-effort
+ * reference material, and the UI shows this as a badge. Levels:
+ *   verified    — field-verified against an actual office
+ *   official    — matches an official published source (proclamation,
+ *                 ministry notice, gazette)
+ *   community   — corroborated by multiple community reports
+ *   best_effort — written from general knowledge; verify at the office
+ */
+const CONFIDENCE_LEVELS = ['verified', 'official', 'community', 'best_effort'];
+
+export function isValidConfidence(c) {
+  return CONFIDENCE_LEVELS.includes(c);
+}
+
 function resolveStep(step, regionDef, locale) {
   const override = regionDef?.step_overrides?.[step.key] || {};
+  const confidence = isValidConfidence(step.confidence) ? step.confidence : 'best_effort';
   const out = {
     key: step.key,
     order: step.order,
@@ -106,6 +124,7 @@ function resolveStep(step, regionDef, locale) {
     description: pick(override.description || step.description, locale),
     responsible_office: pick(override.responsible_office || step.responsible_office, locale),
     official_timeline: pick(override.official_timeline || step.official_timeline, locale),
+    confidence,
     required_documents: (step.required_documents || []).map((d) => ({
       type: d.type,
       label: pick(d.label, locale),

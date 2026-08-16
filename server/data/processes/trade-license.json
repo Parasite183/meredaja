@@ -1,6 +1,6 @@
 {
   "slug": "trade-license",
-  "version": 2,
+  "version": 3,
   "category": "license",
   "name": {
     "en": "Business Trade License Registration",
@@ -14,6 +14,7 @@
   "steps": [
     {
       "key": "register-name",
+      "confidence": "official",
       "order": 1,
       "title": {
         "en": "Register your business name",
@@ -39,6 +40,7 @@
     },
     {
       "key": "get-tin",
+      "confidence": "official",
       "order": 2,
       "title": {
         "en": "Obtain a TIN (tax identification number)",
@@ -64,6 +66,7 @@
     },
     {
       "key": "prepare-lease",
+      "confidence": "best_effort",
       "order": 3,
       "title": {
         "en": "Secure premises and prepare lease documents",
@@ -89,6 +92,7 @@
     },
     {
       "key": "submit-application",
+      "confidence": "official",
       "order": 4,
       "title": {
         "en": "Submit the license application file",
@@ -116,6 +120,7 @@
     },
     {
       "key": "pay-and-collect",
+      "confidence": "best_effort",
       "order": 5,
       "title": {
         "en": "Pay the license fee and collect your license",

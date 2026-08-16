@@ -1,6 +1,6 @@
 {
   "slug": "tin-registration",
-  "version": 2,
+  "version": 3,
   "category": "tax",
   "name": {
     "en": "TIN / Tax Registration",
@@ -14,6 +14,7 @@
   "steps": [
     {
       "key": "prepare-documents",
+      "confidence": "official",
       "order": 1,
       "title": {
         "en": "Prepare your documents",
@@ -39,6 +40,7 @@
     },
     {
       "key": "visit-revenues-office",
+      "confidence": "official",
       "order": 2,
       "title": {
         "en": "Visit the Ministry of Revenues branch office",
@@ -62,6 +64,7 @@
     },
     {
       "key": "fill-and-submit-form",
+      "confidence": "best_effort",
       "order": 3,
       "title": {
         "en": "Fill in and submit the application form",
@@ -88,6 +91,7 @@
     },
     {
       "key": "receive-tin",
+      "confidence": "best_effort",
       "order": 4,
       "title": {
         "en": "Receive your TIN certificate / number",

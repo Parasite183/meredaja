@@ -1,6 +1,6 @@
 {
   "slug": "construction-permit",
-  "version": 2,
+  "version": 3,
   "category": "license",
   "name": {
     "en": "Construction / Building Permit",
@@ -14,6 +14,7 @@
   "steps": [
     {
       "key": "confirm-land-title",
+      "confidence": "official",
       "order": 1,
       "title": {
         "en": "Confirm your land ownership / leasehold title",
@@ -39,6 +40,7 @@
     },
     {
       "key": "hire-design-professionals",
+      "confidence": "official",
       "order": 2,
       "title": {
         "en": "Hire a licensed architect and engineer",
@@ -63,6 +65,7 @@
     },
     {
       "key": "prepare-drawings",
+      "confidence": "official",
       "order": 3,
       "title": {
         "en": "Prepare architectural and structural drawings",
@@ -88,6 +91,7 @@
     },
     {
       "key": "submit-application",
+      "confidence": "best_effort",
       "order": 4,
       "title": {
         "en": "Submit the permit application",
@@ -116,6 +120,7 @@
     },
     {
       "key": "technical-review",
+      "confidence": "best_effort",
       "order": 5,
       "title": {
         "en": "Technical review by the permit committee",
@@ -139,6 +144,7 @@
     },
     {
       "key": "pay-and-collect",
+      "confidence": "best_effort",
       "order": 6,
       "title": {
         "en": "Pay the permit fee and collect your permit",

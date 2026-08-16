@@ -51,3 +51,47 @@ const BADGE_COLORS = {
 export function Badge({ color = 'muted', children }) {
   return <span className={`badge ${BADGE_COLORS[color] || BADGE_COLORS.muted}`}>{children}</span>;
 }
+
+// Color per confidence level — green for field-verified down to gray
+// for best-effort, so the scale reads at a glance.
+const CONFIDENCE_COLORS = {
+  verified: 'ok',
+  official: 'info',
+  community: 'warn',
+  best_effort: 'muted',
+};
+
+/** Small per-step badge: how much to trust this step's content. */
+export function ConfidenceBadge({ level }) {
+  const { t } = useI18n();
+  const safe = CONFIDENCE_COLORS[level] ? level : 'best_effort';
+  return (
+    <span
+      title={t(`conf.${safe}.hint`)}
+      className={`badge ${BADGE_COLORS[CONFIDENCE_COLORS[safe]]}`}
+    >
+      {t(`conf.${safe}`)}
+    </span>
+  );
+}
+
+/** Legend explaining the confidence scale (rendered above steps). */
+export function ConfidenceLegend() {
+  const { t } = useI18n();
+  return (
+    <details className="rounded-xl bg-brand-soft/60 p-3 text-xs text-ink">
+      <summary className="cursor-pointer font-semibold text-brand">
+        {t('conf.title')}
+      </summary>
+      <p className="mt-1">{t('conf.legend')}</p>
+      <div className="mt-2 space-y-1">
+        {['verified', 'official', 'community', 'best_effort'].map((l) => (
+          <p key={l} className="flex items-center gap-2">
+            <ConfidenceBadge level={l} />
+            <span className="text-ink-soft">{t(`conf.${l}.hint`)}</span>
+          </p>
+        ))}
+      </div>
+    </details>
+  );
+}

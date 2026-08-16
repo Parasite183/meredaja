@@ -1,6 +1,6 @@
 {
   "slug": "import-export-license",
-  "version": 2,
+  "version": 3,
   "category": "license",
   "name": {
     "en": "Import / Export License",
@@ -14,6 +14,7 @@
   "steps": [
     {
       "key": "check-trade-license",
+      "confidence": "official",
       "order": 1,
       "title": {
         "en": "Confirm your trade license covers the activity",
@@ -38,6 +39,7 @@
     },
     {
       "key": "get-tin-and-clearance",
+      "confidence": "official",
       "order": 2,
       "title": {
         "en": "Get a TIN and tax clearance",
@@ -62,6 +64,7 @@
     },
     {
       "key": "identify-commodity",
+      "confidence": "best_effort",
       "order": 3,
       "title": {
         "en": "Identify your commodity category and restrictions",
@@ -85,6 +88,7 @@
     },
     {
       "key": "prepare-application",
+      "confidence": "best_effort",
       "order": 4,
       "title": {
         "en": "Prepare the application file",
@@ -114,6 +118,7 @@
     },
     {
       "key": "submit-and-pay",
+      "confidence": "official",
       "order": 5,
       "title": {
         "en": "Submit at MoTRI and pay the license fee",
@@ -138,6 +143,7 @@
     },
     {
       "key": "receive-license",
+      "confidence": "best_effort",
       "order": 6,
       "title": {
         "en": "Receive your import/export license",
