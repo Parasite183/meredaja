@@ -152,25 +152,40 @@ export function isValidRegion(region) {
 }
 
 /**
- * Resolve a process row with community promotion applied: any step
- * tagged best_effort that has >= PROMOTION_THRESHOLD approved reports
- * for this (process, region) is upgraded to community. official/
- * verified steps are never downgraded — the scale is upward-only.
+ * Resolve a process row with live confidence applied, in precedence:
+ *
+ *   1. `verified` — a moderator has field-verified this step
+ *      (step_verifications row). Outranks everything.
+ *   2. `community` — auto-promoted: a best_effort step with >=
+ *      PROMOTION_THRESHOLD approved reports for this (process, region).
+ *   3. the static tag from the process JSON.
+ *
+ * The scale is upward-only: moderation never downgrades a step, and
+ * auto-promotion never downgrades a verified/official step.
  */
 export async function resolveProcessWithPromotion(row, { region, locale = 'en' } = {}) {
   const data = JSON.parse(row.data_json);
   const chosenRegion = region || data.default_region || 'addis_ababa';
-  const counts = await db.all(
-    `SELECT step_key, COUNT(*) AS n
-     FROM step_reports
-     WHERE process_slug = ? AND region = ? AND moderation_status = 'approved'
-     GROUP BY step_key`,
-    [data.slug, chosenRegion]
-  );
+  const [counts, verifications] = await Promise.all([
+    db.all(
+      `SELECT step_key, COUNT(*) AS n
+       FROM step_reports
+       WHERE process_slug = ? AND region = ? AND moderation_status = 'approved'
+       GROUP BY step_key`,
+      [data.slug, chosenRegion]
+    ),
+    db.all(
+      'SELECT step_key FROM step_verifications WHERE process_slug = ? AND region = ?',
+      [data.slug, chosenRegion]
+    ),
+  ]);
   const reportCounts = Object.fromEntries(counts.map((c) => [c.step_key, c.n]));
+  const verifiedSteps = new Set(verifications.map((v) => v.step_key));
   const process = resolveProcess(row, { region: chosenRegion, locale });
   for (const step of process.steps) {
-    if (step.confidence === 'best_effort' && (reportCounts[step.key] || 0) >= PROMOTION_THRESHOLD) {
+    if (verifiedSteps.has(step.key)) {
+      step.confidence = 'verified';
+    } else if (step.confidence === 'best_effort' && (reportCounts[step.key] || 0) >= PROMOTION_THRESHOLD) {
       step.confidence = 'community';
     }
   }

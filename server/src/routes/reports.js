@@ -19,7 +19,7 @@ import { wrap, ok, badRequest, notFound } from '../http.js';
 import { authMiddleware, requireModerator } from '../auth.js';
 import { nowIso } from '../crypto.js';
 import { REPORT_LIMITS } from '../rate-limit.js';
-import { resolveProcess, getProcessRow, isValidRegion } from '../processes.js';
+import { resolveProcess, getProcessRow, listProcesses, isValidRegion, PROMOTION_THRESHOLD } from '../processes.js';
 
 const router = Router();
 
@@ -112,6 +112,87 @@ router.post('/reports/:id/flag', authMiddleware, REPORT_LIMITS.flagUser, wrap(as
     [req.user.id, report.id]
   );
   ok(res, { flagged: true });
+}));
+
+// ── moderator step verification (moderators only) ────────────────────
+//
+// A moderator who confirms a step on the ground marks it `verified`,
+// outranking auto-promoted `community` and the static tag. The list
+// endpoint shows every step currently promoted to community (candidate
+// for verification) or already verified, with report counts.
+
+/** All steps worth moderating: promoted-to-community or verified. */
+router.get('/moderation/steps', authMiddleware, requireModerator, wrap(async (req, res) => {
+  const processes = await listProcesses('en');
+  const out = [];
+  for (const p of processes) {
+    const row = await getProcessRow(p.slug);
+    const data = JSON.parse(row.data_json);
+    // Check every region the process declares, plus its default.
+    const regions = new Set([data.default_region || 'addis_ababa', ...Object.keys(data.regions || {})]);
+    for (const region of regions) {
+      const [counts, verifications] = await Promise.all([
+        db.all(
+          `SELECT step_key, COUNT(*) AS n
+           FROM step_reports
+           WHERE process_slug = ? AND region = ? AND moderation_status = 'approved'
+           GROUP BY step_key`,
+          [p.slug, region]
+        ),
+        db.all('SELECT step_key, verified_by, created_at FROM step_verifications WHERE process_slug = ? AND region = ?', [p.slug, region]),
+      ]);
+      const reportCounts = Object.fromEntries(counts.map((c) => [c.step_key, c.n]));
+      const verified = Object.fromEntries(verifications.map((v) => [v.step_key, v]));
+      const process = resolveProcess(row, { region, locale: 'en' });
+      for (const step of process.steps) {
+        const isVerified = !!verified[step.key];
+        const isPromoted = step.confidence === 'best_effort' && (reportCounts[step.key] || 0) >= PROMOTION_THRESHOLD;
+        if (!isVerified && !isPromoted) continue;
+        out.push({
+          process_slug: p.slug,
+          process_name: p.name,
+          region,
+          step_key: step.key,
+          step_title: step.title,
+          report_count: reportCounts[step.key] || 0,
+          confidence: isVerified ? 'verified' : 'community',
+          verified_at: verified[step.key]?.created_at || null,
+        });
+      }
+    }
+  }
+  ok(res, { steps: out });
+}));
+
+/** Mark a step verified (upsert). */
+router.post('/moderation/steps/verify', authMiddleware, requireModerator, wrap(async (req, res) => {
+  const slug = String(req.body?.process_slug || '').trim();
+  const region = String(req.body?.region || '').trim();
+  const stepKey = String(req.body?.step_key || '').trim();
+  if (!slug || !region || !stepKey) throw badRequest('process_slug, region and step_key are required', 'missing_fields');
+  if (!isValidRegion(region)) throw badRequest('Unknown region', 'region_unknown');
+
+  // The step must exist for this process+region.
+  const row = await getProcessRow(slug);
+  const process = resolveProcess(row, { region, locale: 'en' });
+  if (!process.steps.some((s) => s.key === stepKey)) throw badRequest('Unknown step for this process', 'step_unknown');
+
+  await db.run(
+    `INSERT INTO step_verifications (process_slug, region, step_key, verified_by, created_at)
+     VALUES (?, ?, ?, ?, ?)
+     ON CONFLICT(process_slug, region, step_key) DO UPDATE SET verified_by = excluded.verified_by`,
+    [slug, region, stepKey, req.user.id, nowIso()]
+  );
+  ok(res, { verified: { process_slug: slug, region, step_key: stepKey } }, 201);
+}));
+
+/** Undo a verification. */
+router.delete('/moderation/steps/verify', authMiddleware, requireModerator, wrap(async (req, res) => {
+  const slug = String(req.body?.process_slug || req.query.process_slug || '').trim();
+  const region = String(req.body?.region || req.query.region || '').trim();
+  const stepKey = String(req.body?.step_key || req.query.step_key || '').trim();
+  await db.run('DELETE FROM step_verifications WHERE process_slug = ? AND region = ? AND step_key = ?', [slug, region, stepKey]);
+  ok(res, { verified: false });
 }));
 
 // ── moderation queue (moderators only) ───────────────────────────────

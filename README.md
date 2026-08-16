@@ -172,13 +172,25 @@ Every step carries a `confidence` level that the UI shows as a badge:
 | `best_effort` | Written from general knowledge — verify at the office |
 
 Static levels live in the process JSON (`steps[].confidence`). On top of
-that, the API **auto-promotes** a `best_effort` step to `community` once
-**3 approved community reports** exist for its (process, region, step) —
-`PROMOTION_THRESHOLD` in `server/src/processes.js`. This is how the
-reality-check layer upgrades content without anyone editing JSON: the badge
-becomes live evidence instead of a static tag. Promotion is upward-only
-(`official`/`verified` are never downgraded), counts only `approved` reports
-(flagged/hidden don't count), and is region-scoped.
+that, the API applies live levels with this precedence:
+
+1. **`verified`** — a moderator marked the step field-verified
+   (`step_verifications` row; outranks everything)
+2. **`community`** — auto-promoted: a `best_effort` step with **3 approved
+   community reports** for its (process, region, step) —
+   `PROMOTION_THRESHOLD` in `server/src/processes.js`
+3. the static tag from the JSON
+
+This is how the reality-check layer upgrades content without anyone editing
+JSON: the badge becomes live evidence instead of a static tag. Promotion is
+upward-only (`official`/`verified` are never downgraded), counts only
+`approved` reports (flagged/hidden don't count), and is region-scoped.
+
+Moderators drive the final step from the **Moderation page**: a "Verified
+steps" section lists every community-promoted step, and a moderator who
+confirms it on the ground clicks **Mark verified** (or **Undo verification**
+for a mistake). The loop is complete: best-effort → community (earned via
+reports) → verified (confirmed by a human).
 
 ## What's real vs. seeded placeholder data
 

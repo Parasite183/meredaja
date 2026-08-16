@@ -129,6 +129,20 @@ const TABLES = (idCol) => [
     flagged_by INTEGER,
     created_at TEXT NOT NULL
   )`,
+
+  // Moderator field-verification of a step (process, region, step).
+  // A row here means a moderator confirmed the step on the ground;
+  // the resolver promotes the step's confidence to `verified`,
+  // outranking auto-promoted `community` and any static tag.
+  `CREATE TABLE IF NOT EXISTS step_verifications (
+    id ${idCol},
+    process_slug TEXT NOT NULL,
+    region TEXT NOT NULL,
+    step_key TEXT NOT NULL,
+    verified_by INTEGER NOT NULL,
+    created_at TEXT NOT NULL,
+    UNIQUE(process_slug, region, step_key)
+  )`,
 ];
 
 const INDEXES = [
@@ -140,6 +154,7 @@ const INDEXES = [
   'CREATE INDEX IF NOT EXISTS idx_attachments_doc ON document_attachments(document_id)',
   'CREATE INDEX IF NOT EXISTS idx_attachments_cl ON document_attachments(user_checklist_id)',
   'CREATE INDEX IF NOT EXISTS idx_reports_lookup ON step_reports(process_slug, region, step_key, moderation_status)',
+  'CREATE INDEX IF NOT EXISTS idx_verifications_lookup ON step_verifications(process_slug, region, step_key)',
 ];
 
 /** Full DDL as executable statements. */

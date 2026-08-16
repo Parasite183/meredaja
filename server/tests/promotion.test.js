@@ -104,3 +104,41 @@ test('resolveProcess (pure) is unaffected — no promotion without reports looku
   const step = p.steps.find((s) => s.key === 'prepare-lease');
   assert.equal(step.confidence, 'best_effort');
 });
+
+// ── moderator verification ───────────────────────────────────────────
+
+test('verification promotes any step to verified, outranking community and official', async () => {
+  const row = await rowFor('trade-license');
+  // prepare-lease: community (already promoted by the earlier test's reports).
+  await db.run(
+    `INSERT INTO step_verifications (process_slug, region, step_key, verified_by, created_at)
+     VALUES ('trade-license', 'addis_ababa', 'prepare-lease', 1, ?)`,
+    [new Date().toISOString()]
+  );
+  const p = await resolveProcessWithPromotion(row, { region: 'addis_ababa' });
+  assert.equal(p.steps.find((s) => s.key === 'prepare-lease').confidence, 'verified');
+
+  // official step, never downgraded, but verification still upgrades it.
+  await db.run(
+    `INSERT INTO step_verifications (process_slug, region, step_key, verified_by, created_at)
+     VALUES ('trade-license', 'addis_ababa', 'register-name', 1, ?)`,
+    [new Date().toISOString()]
+  );
+  const p2 = await resolveProcessWithPromotion(row, { region: 'addis_ababa' });
+  assert.equal(p2.steps.find((s) => s.key === 'register-name').confidence, 'verified');
+});
+
+test('un-verifying returns the step to community', async () => {
+  await db.run("DELETE FROM step_verifications WHERE process_slug = 'trade-license' AND region = 'addis_ababa' AND step_key = 'prepare-lease'");
+  const row = await rowFor('trade-license');
+  const p = await resolveProcessWithPromotion(row, { region: 'addis_ababa' });
+  // prepare-lease still has >= threshold approved reports from earlier tests.
+  assert.equal(p.steps.find((s) => s.key === 'prepare-lease').confidence, 'community');
+});
+
+test('verification is region-scoped', async () => {
+  // Verified only in addis_ababa; bahir_dar stays community/static.
+  const row = await rowFor('trade-license');
+  const p = await resolveProcessWithPromotion(row, { region: 'bahir_dar' });
+  assert.equal(p.steps.find((s) => s.key === 'register-name').confidence, 'official');
+});
