@@ -20,5 +20,10 @@ for (const [k, v] of Object.entries(env)) {
 
 // Production semantics (disables the dev OTP-peek endpoint), but static
 // file serving stays off — Cloudflare Pages handles the frontend.
-process.env.NODE_ENV = 'production';
-process.env.MEREDAJA_WORKER = '1';
+//
+// NOTE: wrangler's esbuild `define` rewrites the literal expression
+// `process.env.NODE_ENV`, which would silently no-op a direct assignment
+// (and config.js reads it via an aliased `const env = process.env`, so
+// the define never applies there). Object.assign mutates the same object
+// and cannot be define-replaced, so the value actually lands at runtime.
+Object.assign(process.env, { NODE_ENV: 'production', MEREDAJA_WORKER: '1' });

@@ -47,10 +47,16 @@ const africastalkingProvider = {
     const username = process.env.AFRICASTALKING_USERNAME;
     if (!apiKey || !username) throw new Error("Africa's Talking credentials missing — refusing to send");
     const base = String(username).trim().toLowerCase() === 'sandbox' ? 'https://api.sandbox.africastalking.com' : 'https://api.africastalking.com';
+    // Only set `from` when a registered sender ID is configured — an
+    // unregistered ID makes AT reject the whole request. Without it AT
+    // falls back to its default sender.
+    const body = new URLSearchParams({ username, to: phone, message: `Meredaja verification code: ${code}` });
+    const from = process.env.AFRICASTALKING_FROM;
+    if (from) body.set('from', from);
     const res = await fetch(`${base}/version1/messaging`, {
       method: 'POST',
       headers: { apiKey, 'content-type': 'application/x-www-form-urlencoded', Accept: 'application/json' },
-      body: new URLSearchParams({ username, from: process.env.AFRICASTALKING_FROM || 'MEREDAJA', to: phone, message: `Meredaja verification code: ${code}` }),
+      body,
     });
     if (!res.ok) throw new Error(`Africa's Talking send failed (${res.status})`);
     return { provider: 'africastalking', messageId: String(Date.now()) };

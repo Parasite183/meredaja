@@ -47,6 +47,8 @@ export default function Login() {
     }
   }
 
+  const isDevHost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+
   async function devFill() {
     try {
       const { code: c } = await api(`/api/auth/dev/otp?phone=${encodeURIComponent(phone)}`);
@@ -107,9 +109,11 @@ export default function Login() {
                 {busy ? t('common.loading') : t('common.verify')}
               </button>
               {isDev ? (
-                <button type="button" className="btn btn-secondary btn-sm btn-block" onClick={devFill}>
-                  {t('otp.devFill')}
-                </button>
+                {isDevHost && (
+                  <button type="button" className="btn btn-secondary btn-sm btn-block" onClick={devFill}>
+                    {t('otp.devFill')}
+                  </button>
+                )}
               ) : null}
               <button type="button" className="btn btn-ghost btn-sm btn-block" onClick={() => { setStep('phone'); setCode(''); setError(''); }}>
                 {t('otp.resend')}

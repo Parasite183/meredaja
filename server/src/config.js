@@ -33,7 +33,9 @@ export const config = {
 };
 
 /** Absolute path to the `server` package root. */
-export const serverRoot = new URL('..', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
+// import.meta.url is not a usable URL base on Cloudflare Workers, so
+// fall back to a placeholder (only used for local disk paths there).
+export const serverRoot = new URL('..', import.meta.url || 'file:///meredaja/server/').pathname.replace(/^\/([A-Za-z]:)/, '$1');
 
 /**
  * Startup configuration validation. Returns a list of problems; an empty
@@ -57,6 +59,15 @@ export function validateConfig() {
 
   if (config.smsProvider === 'console') {
     problems.push({ name: 'SMS_PROVIDER', message: 'must be twilio or africastalking in production (console stub is dev-only)' });
+  } else if (config.smsProvider === 'africastalking') {
+    if (!env.AFRICASTALKING_API_KEY) problems.push({ name: 'AFRICASTALKING_API_KEY', message: 'required when SMS_PROVIDER=africastalking' });
+    if (!env.AFRICASTALKING_USERNAME) problems.push({ name: 'AFRICASTALKING_USERNAME', message: 'required when SMS_PROVIDER=africastalking' });
+  } else if (config.smsProvider === 'twilio') {
+    if (!env.TWILIO_ACCOUNT_SID) problems.push({ name: 'TWILIO_ACCOUNT_SID', message: 'required when SMS_PROVIDER=twilio' });
+    if (!env.TWILIO_AUTH_TOKEN) problems.push({ name: 'TWILIO_AUTH_TOKEN', message: 'required when SMS_PROVIDER=twilio' });
+    if (!env.TWILIO_FROM) problems.push({ name: 'TWILIO_FROM', message: 'required when SMS_PROVIDER=twilio' });
+  } else {
+    problems.push({ name: 'SMS_PROVIDER', message: `unknown provider "${config.smsProvider}"` });
   }
 
   return problems;

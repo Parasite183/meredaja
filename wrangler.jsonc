@@ -13,7 +13,11 @@
   // driver replaces them, so these imports are stubbed at build time.
   "alias": {
     "better-sqlite3": "./server/src/worker-stubs/sqlite-stub.js",
-    "pg": "./server/src/worker-stubs/pg-stub.js"
+    "pg": "./server/src/worker-stubs/pg-stub.js",
+    // iconv-lite's `browser` field breaks its Node code path under
+    // nodejs_compat (see the stub's header comment) — replace it with
+    // a minimal TextDecoder-based implementation.
+    "iconv-lite": "./server/src/worker-stubs/iconv-lite-stub.cjs"
   },
   "d1_databases": [
     {
