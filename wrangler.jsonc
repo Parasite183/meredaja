@@ -1,0 +1,31 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "meredaja-api",
+  "main": "server/src/worker.js",
+  "compatibility_date": "2026-01-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "vars": {
+    "DEV_MODE": "false",
+    "SMS_PROVIDER": "africastalking"
+  },
+  // better-sqlite3 (native) and pg cannot run on Workers — the D1
+  // driver replaces them, so these imports are stubbed at build time.
+  "alias": {
+    "better-sqlite3": "./server/src/worker-stubs/sqlite-stub.js",
+    "pg": "./server/src/worker-stubs/pg-stub.js"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "meredaja-db",
+      "database_id": "6d92a045-4a1e-4bf1-8623-fbc66cd3bf0f"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "UPLOADS",
+      "bucket_name": "meredaja-uploads"
+    }
+  ]
+}

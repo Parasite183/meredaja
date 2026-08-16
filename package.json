@@ -1,0 +1,29 @@
+{
+  "name": "meredaja",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Meredaja (መሬዳጃ) — a bureaucracy navigator that turns Ethiopian government permit and registration processes into step-by-step guided checklists.",
+  "type": "module",
+  "workspaces": [
+    "server",
+    "web"
+  ],
+  "scripts": {
+    "setup": "npm install",
+    "dev": "concurrently -n api,web -c cyan,magenta \"npm:dev:server\" \"npm:dev:web\"",
+    "dev:server": "npm run dev -w server",
+    "dev:web": "npm run dev -w web",
+    "seed": "npm run seed -w server",
+    "test": "npm test -w server",
+    "build": "npm run build -w web",
+    "start": "npm run start -w server",
+    "deploy": "node scripts/deploy-cloudflare.mjs",
+    "deploy:api": "wrangler deploy",
+    "deploy:web": "node scripts/deploy-cloudflare.mjs",
+    "deploy:seed": "node server/scripts/dump-seed-sql.mjs && wrangler d1 execute meredaja-db --remote --file=server/seed-d1.sql"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "wrangler": "^4.123.0"
+  }
+}

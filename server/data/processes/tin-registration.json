@@ -1,0 +1,149 @@
+{
+  "slug": "tin-registration",
+  "version": 1,
+  "category": "tax",
+  "name": {
+    "en": "TIN / Tax Registration",
+    "am": "የታቢ ቁጥር / የግብር ምዝገባ"
+  },
+  "summary": {
+    "en": "Register for a Tax Identification Number (TIN) with the Ministry of Revenues. Required for almost everything formal: opening a business, getting a license, bank accounts for companies, and paying taxes.",
+    "am": "ከገቢዎች ሚኒስቴር ጋር የግብር መለያ ቁጥር (ታቢ) ያስመዝግቡ። ንግድ ለመጀመር፣ ፈቃድ ለማግኘትና ግብር ለመክፈል ይፈለጋል።"
+  },
+  "default_region": "addis_ababa",
+  "steps": [
+    {
+      "key": "prepare-documents",
+      "order": 1,
+      "title": {
+        "en": "Prepare your documents",
+        "am": "ሰነዶችዎን ያዘጋጁ"
+      },
+      "description": {
+        "en": "Gather your ID, proof of address and photos. For business TIN registration you also need your business name certificate (if registered) and details of your business activity.",
+        "am": "መታወቂያዎን፣ የአድራሻ ማረጋገጫዎንና ፎቶዎችን ያዘጋጁ።"
+      },
+      "responsible_office": {
+        "en": "Yourself (no office visit needed for this step)",
+        "am": "እርስዎ ራስዎ (ለዚህ እርምጃ ቢሮ መሄድ አያስፈልግም)"
+      },
+      "official_timeline": {
+        "en": "30 minutes",
+        "am": "30 ደቂቃ"
+      },
+      "required_documents": [
+        { "type": "national_id", "label": { "en": "National ID / Kebele ID (original + copy)", "am": "የመታወቂያ ካርድ (መጀመሪያ + ቅጂ)" } },
+        { "type": "address_proof", "label": { "en": "Proof of address (utility bill or lease agreement)", "am": "የአድራሻ ማረጋገጫ" } },
+        { "type": "passport_photo", "label": { "en": "Passport-size photo (1)", "am": "የፓስፖርት መጠን ፎቶ (1)" } }
+      ]
+    },
+    {
+      "key": "visit-revenues-office",
+      "order": 2,
+      "title": {
+        "en": "Visit the Ministry of Revenues branch office",
+        "am": "የገቢዎች ሚኒስቴር ቅርንጫፍ ጽህፈት ቤት ይጎብኙ"
+      },
+      "description": {
+        "en": "Go to the branch office that serves your area (in Addis Ababa: the sub-city tax office or the main MoR branches). Get a queue number and collect the TIN application form from the customer service desk.",
+        "am": "አካባቢዎን ወደሚያገለግለው የገቢዎች ሚኒስቴር ቅርንጫፍ ይሂዱና የማመልከቻ ቅጹን ይውሰዱ።"
+      },
+      "responsible_office": {
+        "en": "Ministry of Revenues — sub-city tax office / branch",
+        "am": "የገቢዎች ሚኒስቴር — የክፍለ ከተማ የግብር ጽህፈት ቤት"
+      },
+      "official_timeline": {
+        "en": "Half a day (queue dependent)",
+        "am": "ግማሽ ቀን"
+      },
+      "required_documents": [
+        { "type": "national_id", "label": { "en": "National ID (original + copy)", "am": "የመታወቂያ ካርድ" } }
+      ]
+    },
+    {
+      "key": "fill-and-submit-form",
+      "order": 3,
+      "title": {
+        "en": "Fill in and submit the application form",
+        "am": "የማመልከቻ ቅጹን ይሙሉና ያቅርቡ"
+      },
+      "description": {
+        "en": "Fill the TIN application form with your personal details and, for businesses, the business details. Submit it together with your documents at the designated counter. You may be asked for a business profile or lease documents if registering as a business.",
+        "am": "የታቢ ማመልከቻ ቅጹን ይሙሉና ከሰነዶችዎ ጋር ያቅርቡ።"
+      },
+      "responsible_office": {
+        "en": "Ministry of Revenues — registration desk",
+        "am": "የገቢዎች ሚኒስቴር — የምዝገባ ዴስክ"
+      },
+      "official_timeline": {
+        "en": "30–60 minutes at the counter",
+        "am": "30–60 ደቂቃ"
+      },
+      "required_documents": [
+        { "type": "national_id", "label": { "en": "ID (original + copy)", "am": "መታወቂያ" } },
+        { "type": "passport_photo", "label": { "en": "Passport-size photo (1)", "am": "የፓስፖርት መጠን ፎቶ (1)" } },
+        { "type": "business_docs", "label": { "en": "Business registration documents (for business TIN)", "am": "የንግድ ምዝገባ ሰነዶች (ለንግድ ታቢ)" } },
+        { "type": "lease_agreement", "label": { "en": "Lease agreement (for business TIN)", "am": "የኪራይ ውል (ለንግድ ታቢ)" } }
+      ]
+    },
+    {
+      "key": "receive-tin",
+      "order": 4,
+      "title": {
+        "en": "Receive your TIN certificate / number",
+        "am": "የታቢ የምስክር ወረቀት / ቁጥር ይቀበሉ"
+      },
+      "description": {
+        "en": "For individuals the TIN is often issued the same day after verification. If your file needs review you will be told when to return. Keep the certificate safe — you will need it for licenses, bank accounts and every future process.",
+        "am": "ታቢዎ በዚያው ቀን ሊሰጥ ይችላል። የምስክር ወረቀቱን በደህና ያስቀምጡ።"
+      },
+      "responsible_office": {
+        "en": "Ministry of Revenues — issuance desk",
+        "am": "የገቢዎች ሚኒስቴር — የመስጫ ዴስክ"
+      },
+      "official_timeline": {
+        "en": "Same day – 1 week (review dependent)",
+        "am": "በዚያው ቀን – 1 ሳምንት"
+      },
+      "required_documents": [
+        { "type": "application_receipt", "label": { "en": "Application receipt / reference number", "am": "የማመልከቻ ደረሰኝ" } }
+      ]
+    }
+  ],
+  "common_rejection_reasons": [
+    { "en": "ID document unreadable, expired, or details mismatch between documents", "am": "መታወቂያው የማይነበብ ወይም ዝርዝሮቹ የማይዛመዱ ናቸው" },
+    { "en": "Business TIN requested without business registration documents", "am": "የንግድ ታቢ ያለ የንግድ ምዝገባ ሰነዶች" },
+    { "en": "Lease/address proof missing or not in the applicant's name", "am": "የኪራይ/አድራሻ ማረጋገጫ የለም" },
+    { "en": "Duplicate registration — person already has an active TIN", "am": "ድግግሞሽ ምዝገባ" }
+  ],
+  "regions": {
+    "addis_ababa": {
+      "notes": {
+        "en": "Addis Ababa has dedicated tax offices per sub-city plus central MoR branches. Same-day issuance is common for individuals.",
+        "am": "አዲስ አበባ በክፍለ ከተማ የግብር ጽህፈት ቤቶች አሉት።"
+      }
+    },
+    "bahir_dar": {
+      "notes": {
+        "en": "Ministry of Revenues Bahir Dar branch serves the Amhara region. Regional office queues can be longer during tax season (June–July).",
+        "am": "ባህር ዳር የገቢዎች ሚኒስቴር ቅርንጫፍ የአማራ ክልልን ያገለግላል።"
+      },
+      "step_overrides": {
+        "visit-revenues-office": {
+          "responsible_office": { "en": "Ministry of Revenues — Bahir Dar branch" }
+        }
+      }
+    },
+    "mekelle": {
+      "notes": {
+        "en": "Ministry of Revenues Mekelle branch. Check current operating status before travelling.",
+        "am": "የገቢዎች ሚኒስቴር መቀሌ ቅርንጫፍ።"
+      },
+      "step_overrides": {
+        "visit-revenues-office": {
+          "responsible_office": { "en": "Ministry of Revenues — Mekelle branch" }
+        }
+      }
+    }
+  }
+}

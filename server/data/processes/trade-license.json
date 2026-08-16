@@ -1,0 +1,187 @@
+{
+  "slug": "trade-license",
+  "version": 1,
+  "category": "license",
+  "name": {
+    "en": "Business Trade License Registration",
+    "am": "የንግድ ፈቃድ ምዝገባ"
+  },
+  "summary": {
+    "en": "Get a trade license to operate a business in your city. This is the classic first-permit for small traders: business name, TIN, lease documents, then the license itself from the city trade office.",
+    "am": "በከተማዎ ውስጥ ንግድ ለመስራት የንግድ ፈቃድ ያግኙ። ይህ ለትናንሽ ነጋዴዎች የመጀመሪያው ፈቃድ ነው፡ የንግድ ስም፣ ታቢ ቁጥር፣ የኪራይ ሰነዶች፣ ከዚያም ፈቃዱ ራሱ።"
+  },
+  "default_region": "addis_ababa",
+  "steps": [
+    {
+      "key": "register-name",
+      "order": 1,
+      "title": {
+        "en": "Register your business name",
+        "am": "የንግድ ስምዎን ያስመዝግቡ"
+      },
+      "description": {
+        "en": "Reserve and register the name your business will trade under. In Addis Ababa this is done at the sub-city trade and industry development office. Check the name is available first — names that are identical or too similar to an existing business are rejected.",
+        "am": "ንግድዎ በሚሰራበት ስም ይመዝገቡ። በአዲስ አበባ ይህ በክፍለ ከተማ ንግድና ኢንዱስትሪ ልማት ጽህፈት ቤት ይከናወናል።"
+      },
+      "responsible_office": {
+        "en": "Sub-city Trade and Industry Development Office (or Ministry of Trade and Regional Integration for federal processes)",
+        "am": "የክፍለ ከተማ ንግድና ኢንዱስትሪ ልማት ጽህፈት ቤት"
+      },
+      "official_timeline": {
+        "en": "1–3 working days",
+        "am": "ከ1–3 የስራ ቀናት"
+      },
+      "required_documents": [
+        { "type": "national_id", "label": { "en": "National ID / Kebele ID (original + copy)", "am": "የመታወቂያ ካርድ (መጀመሪያ + ቅጂ)" } },
+        { "type": "passport_photo", "label": { "en": "Passport-size photo (2)", "am": "የፓስፖርት መጠን ፎቶ (2)" } },
+        { "type": "name_availability", "label": { "en": "Proposed business name (1–3 alternatives)", "am": "የታቀደ የንግድ ስም (1–3 አማራጮች)" } }
+      ]
+    },
+    {
+      "key": "get-tin",
+      "order": 2,
+      "title": {
+        "en": "Obtain a TIN (tax identification number)",
+        "am": "ታቢ (የግብር መለያ ቁጥር) ያግኙ"
+      },
+      "description": {
+        "en": "Every business needs a TIN before the license can be issued. Register at the nearest Ministry of Revenues branch. You can use the dedicated TIN registration checklist in this app alongside this one.",
+        "am": "ፈቃድ ከመሰጠቱ በፊት እያንዳንዱ ንግድ ታቢ ቁጥር ሊኖረው ይገባል።"
+      },
+      "responsible_office": {
+        "en": "Ministry of Revenues (branch office)",
+        "am": "የገቢዎች ሚኒስቴር (ቅርንጫፍ ጽህፈት ቤት)"
+      },
+      "official_timeline": {
+        "en": "Same day – 1 working day",
+        "am": "በዚያው ቀን – 1 የስራ ቀን"
+      },
+      "required_documents": [
+        { "type": "national_id", "label": { "en": "National ID / Kebele ID (original + copy)", "am": "የመታወቂያ ካርድ" } },
+        { "type": "address_proof", "label": { "en": "Proof of address / lease agreement", "am": "የአድራሻ ማረጋገጫ / የኪራይ ውል" } },
+        { "type": "passport_photo", "label": { "en": "Passport-size photo (1)", "am": "የፓስፖርት መጠን ፎቶ (1)" } }
+      ]
+    },
+    {
+      "key": "prepare-lease",
+      "order": 3,
+      "title": {
+        "en": "Secure premises and prepare lease documents",
+        "am": "የንግድ ቦታ ይያዙና የኪራይ ሰነዶችን ያዘጋጁ"
+      },
+      "description": {
+        "en": "The trade office will verify your business premises. You need a notarized lease agreement (or proof of ownership if you own the property) plus the landlord's ID copy and a property tax clearance if required locally.",
+        "am": "የንግድ ቦታዎ መረጋገጥ አለበት።"
+      },
+      "responsible_office": {
+        "en": "Notary office + sub-city administration",
+        "am": "የኖታሪ ጽህፈት ቤት + የክፍለ ከተማ አስተዳደር"
+      },
+      "official_timeline": {
+        "en": "1–5 working days (depends on notary queue)",
+        "am": "ከ1–5 የስራ ቀናት"
+      },
+      "required_documents": [
+        { "type": "lease_agreement", "label": { "en": "Notarized lease agreement or ownership deed", "am": "የተረጋገጠ የኪራይ ውል" } },
+        { "type": "national_id", "label": { "en": "Landlord's ID copy", "am": "የባለንብረቱ መታወቂያ ቅጂ" } },
+        { "type": "tax_clearance", "label": { "en": "Property tax clearance (if required locally)", "am": "የንብረት ግብር ማረጋገጫ" } }
+      ]
+    },
+    {
+      "key": "submit-application",
+      "order": 4,
+      "title": {
+        "en": "Submit the license application file",
+        "am": "የፈቃድ ማመልከቻውን ያቅርቡ"
+      },
+      "description": {
+        "en": "Assemble the full application: the application form from the trade office, your name registration certificate, TIN certificate, lease documents, ID copies and photos. Submit at the sub-city trade office counter and get a receipt/queue reference.",
+        "am": "ሙሉ ማመልከቻውን ያዘጋጁና በክፍለ ከተማ ንግድ ጽህፈት ቤት ያቅርቡ።"
+      },
+      "responsible_office": {
+        "en": "Sub-city Trade and Industry Development Office",
+        "am": "የክፍለ ከተማ ንግድና ኢንዱስትሪ ልማት ጽህፈት ቤት"
+      },
+      "official_timeline": {
+        "en": "1 working day to file",
+        "am": "1 የስራ ቀን"
+      },
+      "required_documents": [
+        { "type": "name_certificate", "label": { "en": "Business name registration certificate", "am": "የንግድ ስም ምዝገባ የምስክር ወረቀት" } },
+        { "type": "tin_certificate", "label": { "en": "TIN certificate", "am": "የታቢ የምስክር ወረቀት" } },
+        { "type": "lease_agreement", "label": { "en": "Lease agreement + landlord ID", "am": "የኪራይ ውል + የባለንብረት መታወቂያ" } },
+        { "type": "national_id", "label": { "en": "Applicant ID (original + copy)", "am": "የአመልካች መታወቂያ" } },
+        { "type": "passport_photo", "label": { "en": "Passport-size photos (2)", "am": "የፓስፖርት መጠን ፎቶ (2)" } }
+      ]
+    },
+    {
+      "key": "pay-and-collect",
+      "order": 5,
+      "title": {
+        "en": "Pay the license fee and collect your license",
+        "am": "ክፍያውን ይክፈሉና ፈቃድዎን ይቀበሉ"
+      },
+      "description": {
+        "en": "Once approved, pay the license fee at the designated bank/cashier (fees vary by business type and capital) and return with the receipt to collect your trade license. Verify the business name and address on the license before leaving the counter.",
+        "am": "ጸድቆ ከተጠናቀቀ በኋላ ክፍያውን ይክፈሉና ፈቃድዎን ይቀበሉ።"
+      },
+      "responsible_office": {
+        "en": "Sub-city Trade and Industry Development Office",
+        "am": "የክፍለ ከተማ ንግድና ኢንዱስትሪ ልማት ጽህፈት ቤት"
+      },
+      "official_timeline": {
+        "en": "1–3 working days after approval",
+        "am": "ከጸደቀ በኋላ ከ1–3 የስራ ቀናት"
+      },
+      "required_documents": [
+        { "type": "payment_receipt", "label": { "en": "License fee payment receipt", "am": "የክፍያ ደረሰኝ" } }
+      ]
+    }
+  ],
+  "common_rejection_reasons": [
+    { "en": "Business name already registered or too similar to an existing name", "am": "የንግድ ስሙ ቀድሞ የተመዘገበ ወይም ከነባር ስም ጋር ተመሳሳይ ነው" },
+    { "en": "Lease agreement not notarized or premises could not be verified", "am": "የኪራይ ውሉ ያልተረጋገጠ ወይም ቦታው ሊረጋገጥ አልቻለም" },
+    { "en": "Missing TIN certificate or mismatch between TIN and ID details", "am": "የታቢ የምስክር ወረቀት የለም" },
+    { "en": "Incomplete application file (missing photos, copies, or form)", "am": "ያልተሟላ ማመልከቻ" },
+    { "en": "Business activity not covered by the requested license category", "am": "እንቅስቃሴው በተጠየቀው የፈቃድ ምድብ ውስጥ የለም" }
+  ],
+  "regions": {
+    "addis_ababa": {
+      "notes": {
+        "en": "Addis Ababa sub-city offices handle the full process. Queues are long in some sub-cities — go early in the morning and bring extra copies of everything.",
+        "am": "የአዲስ አበባ ክፍለ ከተማ ጽህፈት ቤቶች ሙሉውን ሂደት ይይዛሉ።"
+      }
+    },
+    "bahir_dar": {
+      "notes": {
+        "en": "Handled by the Amhara Region Trade Bureau in Bahir Dar. Fees and timelines are similar; name registration is federal via the Ministry of Trade's system.",
+        "am": "በባህር ዳር በአማራ ክልል የንግድ ቢሮ ይከናወናል።"
+      },
+      "step_overrides": {
+        "register-name": {
+          "responsible_office": { "en": "Ministry of Trade and Regional Integration (federal name registration)" }
+        },
+        "submit-application": {
+          "responsible_office": { "en": "Amhara Region Trade Bureau, Bahir Dar branch" }
+        },
+        "pay-and-collect": {
+          "responsible_office": { "en": "Amhara Region Trade Bureau, Bahir Dar branch" }
+        }
+      }
+    },
+    "hawassa": {
+      "notes": {
+        "en": "Handled by the Sidama Region Trade Bureau. Same federal name-registration step; local offices issue the license.",
+        "am": "በሲዳማ ክልል የንግድ ቢሮ ይከናወናል።"
+      },
+      "step_overrides": {
+        "submit-application": {
+          "responsible_office": { "en": "Sidama Region Trade Bureau, Hawassa branch" }
+        },
+        "pay-and-collect": {
+          "responsible_office": { "en": "Sidama Region Trade Bureau, Hawassa branch" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+node_modules/
+dist/
+*.log
+.wrangler/
+
+# generated seed dump for D1 (regenerate with npm run deploy:seed)
+server/seed-d1.sql
+
+# local data + uploads (never commit)
+server/data/*.db
+server/data/*.db-wal
+server/data/*.db-shm
+server/uploads/documents/
+
+# env
+.env
+.env.local
+
+# os
+.DS_Store
+Thumbs.db

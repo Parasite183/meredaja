@@ -1,0 +1,138 @@
+{
+  "slug": "business-name",
+  "version": 1,
+  "category": "name",
+  "name": {
+    "en": "Business Name Registration",
+    "am": "የንግድ ስም ምዝገባ"
+  },
+  "summary": {
+    "en": "Register the name your business trades under. This is the first step for most new businesses and is a prerequisite for a trade license and business TIN.",
+    "am": "ንግድዎ የሚሰራበትን ስም ያስመዝግቡ። ለአብዛኛዎቹ አዳዲስ ንግዶች የመጀመሪያው እርምጃ ነው።"
+  },
+  "default_region": "addis_ababa",
+  "steps": [
+    {
+      "key": "check-availability",
+      "order": 1,
+      "title": {
+        "en": "Check name availability",
+        "am": "የስም አገኘነት ይፈትሹ"
+      },
+      "description": {
+        "en": "Search the business name registry to confirm your proposed name is not taken and not too similar to an existing registered name. Most trade offices let you check at the counter or via the federal business registry.",
+        "am": "የቀረበው ስም እንዳልተያዘ ያረጋግጡ።"
+      },
+      "responsible_office": {
+        "en": "Trade office / federal business registry (check first)",
+        "am": "የንግድ ጽህፈት ቤት"
+      },
+      "official_timeline": {
+        "en": "30 minutes (counter search)",
+        "am": "30 ደቂቃ"
+      },
+      "required_documents": [
+        { "type": "name_availability", "label": { "en": "Proposed business name(s) — 1 to 3 alternatives", "am": "የታቀደ የንግድ ስም (1–3 አማራጮች)" } }
+      ]
+    },
+    {
+      "key": "submit-name-application",
+      "order": 2,
+      "title": {
+        "en": "Submit the name reservation application",
+        "am": "የስም ቦታ ማስያዣ ማመልከቻ ያቅርቡ"
+      },
+      "description": {
+        "en": "Fill the business name application form with your details and preferred names in order of priority. Submit it with your ID. The office reserves the name once approved.",
+        "am": "የንግድ ስም ማመልከቻ ቅጹን ይሙሉና ከመታወቂያዎ ጋር ያቅርቡ።"
+      },
+      "responsible_office": {
+        "en": "Trade office — name registration desk",
+        "am": "የንግድ ጽህፈት ቤት — የስም ምዝገባ ዴስክ"
+      },
+      "official_timeline": {
+        "en": "1–3 working days",
+        "am": "ከ1–3 የስራ ቀናት"
+      },
+      "required_documents": [
+        { "type": "national_id", "label": { "en": "National ID / Kebele ID (original + copy)", "am": "የመታወቂያ ካርድ" } },
+        { "type": "passport_photo", "label": { "en": "Passport-size photo (1)", "am": "የፓስፖርት መጠን ፎቶ (1)" } },
+        { "type": "name_availability", "label": { "en": "Proposed names (1–3)", "am": "የታቀዱ ስሞች (1–3)" } }
+      ]
+    },
+    {
+      "key": "pay-name-fee",
+      "order": 3,
+      "title": {
+        "en": "Pay the registration fee",
+        "am": "የምዝገባ ክፍያ ይክፈሉ"
+      },
+      "description": {
+        "en": "Pay the name registration fee once the name is approved. Payment is usually at a designated bank or the office cashier, and you keep the receipt as proof.",
+        "am": "ስሙ ከጸደቀ በኋላ የምዝገባ ክፍያውን ይክፈሉ።"
+      },
+      "responsible_office": {
+        "en": "Designated bank / office cashier",
+        "am": "የተሰየመ ባንክ / የቢሮ ካሽየር"
+      },
+      "official_timeline": {
+        "en": "Same day",
+        "am": "በዚያው ቀን"
+      },
+      "required_documents": [
+        { "type": "name_approval", "label": { "en": "Name approval letter/reference", "am": "የስም ማጽደቂያ ደብዳቤ" } },
+        { "type": "payment_receipt", "label": { "en": "Payment receipt (kept as proof)", "am": "የክፍያ ደረሰኝ" } }
+      ]
+    },
+    {
+      "key": "collect-certificate",
+      "order": 4,
+      "title": {
+        "en": "Collect the name registration certificate",
+        "am": "የስም ምዝገባ የምስክር ወረቀት ይቀበሉ"
+      },
+      "description": {
+        "en": "Return to the trade office with your payment receipt to collect the official business name registration certificate. Check the spelling of the name and your details before leaving — corrections later are slow.",
+        "am": "የክፍያ ደረሰኝዎን ይዘው ተመልሰው የንግድ ስም ምዝገባ የምስክር ወረቀት ይቀበሉ።"
+      },
+      "responsible_office": {
+        "en": "Trade office — certificate desk",
+        "am": "የንግድ ጽህፈት ቤት — የምስክር ወረቀት ዴስክ"
+      },
+      "official_timeline": {
+        "en": "1–3 working days after payment",
+        "am": "ከክፍያ በኋላ ከ1–3 የስራ ቀናት"
+      },
+      "required_documents": [
+        { "type": "payment_receipt", "label": { "en": "Payment receipt", "am": "የክፍያ ደረሰኝ" } }
+      ]
+    }
+  ],
+  "common_rejection_reasons": [
+    { "en": "Name identical or confusingly similar to an existing registered business", "am": "ስሙ ከነባር ንግድ ጋር ተመሳሳይ ነው" },
+    { "en": "Name contains prohibited words (e.g. government/royal references without authorization)", "am": "ስሙ የተከለከሉ ቃላት ይዟል" },
+    { "en": "Incomplete application form or missing ID copy", "am": "ያልተሟላ ቅጽ" }
+  ],
+  "regions": {
+    "addis_ababa": {
+      "notes": {
+        "en": "Name registration is handled by sub-city trade offices in Addis Ababa. Name checks and issuance are usually quick; the federal registry is used for companies (PLC/SC).",
+        "am": "በአዲስ አበባ የስም ምዝገባ በክፍለ ከተማ የንግድ ጽህፈት ቤቶች ይከናወናል።"
+      }
+    },
+    "dire_dawa": {
+      "notes": {
+        "en": "Dire Dawa has its own city administration trade office handling name registration directly.",
+        "am": "ድሬ ዳዋ የራሷ የንግድ ጽህፈት ቤት አላት።"
+      },
+      "step_overrides": {
+        "submit-name-application": {
+          "responsible_office": { "en": "Dire Dawa City Administration Trade Office" }
+        },
+        "collect-certificate": {
+          "responsible_office": { "en": "Dire Dawa City Administration Trade Office" }
+        }
+      }
+    }
+  }
+}
