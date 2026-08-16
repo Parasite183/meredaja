@@ -142,3 +142,62 @@ test('verification is region-scoped', async () => {
   const p = await resolveProcessWithPromotion(row, { region: 'bahir_dar' });
   assert.equal(p.steps.find((s) => s.key === 'register-name').confidence, 'official');
 });
+
+// ── verification audit log ───────────────────────────────────────────
+
+test('verify and unverify actions are logged with actor and timestamp', async () => {
+  // Simulate what the route does: write verification + log row.
+  const actorId = 42;
+  await db.run(
+    `INSERT INTO step_verifications (process_slug, region, step_key, verified_by, created_at)
+     VALUES ('business-name', 'addis_ababa', 'collect-certificate', ?, ?)`,
+    [actorId, new Date().toISOString()]
+  );
+  await db.run(
+    `INSERT INTO step_verification_log (process_slug, region, step_key, action, actor_id, created_at)
+     VALUES ('business-name', 'addis_ababa', 'collect-certificate', 'verify', ?, ?)`,
+    [actorId, new Date().toISOString()]
+  );
+
+  const log = await db.all(
+    `SELECT l.*, u.phone AS actor_phone
+     FROM step_verification_log l LEFT JOIN users u ON u.id = l.actor_id
+     WHERE l.process_slug = 'business-name' AND l.step_key = 'collect-certificate'
+     ORDER BY l.id DESC LIMIT 1`
+  );
+  assert.equal(log.length, 1);
+  assert.equal(log[0].action, 'verify');
+  assert.equal(log[0].actor_id, actorId);
+  assert.ok(log[0].created_at, 'timestamp recorded');
+
+  // Undo: drop state, log an unverify.
+  await db.run("DELETE FROM step_verifications WHERE process_slug = 'business-name' AND region = 'addis_ababa' AND step_key = 'collect-certificate'");
+  await db.run(
+    `INSERT INTO step_verification_log (process_slug, region, step_key, action, actor_id, created_at)
+     VALUES ('business-name', 'addis_ababa', 'collect-certificate', 'unverify', ?, ?)`,
+    [actorId, new Date().toISOString()]
+  );
+  const undone = await db.all("SELECT action FROM step_verification_log WHERE process_slug = 'business-name' AND step_key = 'collect-certificate' ORDER BY id DESC LIMIT 1");
+  assert.equal(undone[0].action, 'unverify');
+
+  // The step drops back to its static level once un-verified (this
+  // step never accumulated reports, so it returns to best_effort).
+  const row = await rowFor('business-name');
+  const p = await resolveProcessWithPromotion(row, { region: 'addis_ababa' });
+  assert.equal(p.steps.find((s) => s.key === 'collect-certificate').confidence, 'best_effort');
+});
+
+test('verification log keeps history across repeated actions', async () => {
+  const actorId = 43;
+  for (let i = 0; i < 3; i++) {
+    await db.run(
+      `INSERT INTO step_verification_log (process_slug, region, step_key, action, actor_id, created_at)
+       VALUES ('tin-registration', 'addis_ababa', 'receive-tin', ${i % 2 === 0 ? "'verify'" : "'unverify'"}, ?, ?)`,
+      [actorId, new Date(Date.now() + i).toISOString()]
+    );
+  }
+  const log = await db.all(
+    "SELECT action FROM step_verification_log WHERE process_slug = 'tin-registration' AND step_key = 'receive-tin' ORDER BY id ASC"
+  );
+  assert.deepEqual(log.map((l) => l.action), ['verify', 'unverify', 'verify']);
+});

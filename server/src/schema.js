@@ -143,6 +143,19 @@ const TABLES = (idCol) => [
     created_at TEXT NOT NULL,
     UNIQUE(process_slug, region, step_key)
   )`,
+
+  // Audit trail of every verify / unverify action (who, what, when).
+  // step_verifications holds the current state; this log preserves
+  // the history so moderator actions are accountable and reviewable.
+  `CREATE TABLE IF NOT EXISTS step_verification_log (
+    id ${idCol},
+    process_slug TEXT NOT NULL,
+    region TEXT NOT NULL,
+    step_key TEXT NOT NULL,
+    action TEXT NOT NULL,                          -- verify | unverify
+    actor_id INTEGER NOT NULL,
+    created_at TEXT NOT NULL
+  )`,
 ];
 
 const INDEXES = [
@@ -155,6 +168,8 @@ const INDEXES = [
   'CREATE INDEX IF NOT EXISTS idx_attachments_cl ON document_attachments(user_checklist_id)',
   'CREATE INDEX IF NOT EXISTS idx_reports_lookup ON step_reports(process_slug, region, step_key, moderation_status)',
   'CREATE INDEX IF NOT EXISTS idx_verifications_lookup ON step_verifications(process_slug, region, step_key)',
+  'CREATE INDEX IF NOT EXISTS idx_verification_log_lookup ON step_verification_log(process_slug, region, step_key)',
+  'CREATE INDEX IF NOT EXISTS idx_verification_log_actor ON step_verification_log(actor_id)',
 ];
 
 /** Full DDL as executable statements. */

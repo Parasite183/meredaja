@@ -189,6 +189,13 @@ export default {
   'mod.noCandidates': 'No promoted steps to verify yet. Steps reach “community” after {n} approved reports.',
   'mod.reportsOnStep': '{n} reports on this step',
   'mod.verifiedOn': 'Verified {date}',
+  'mod.history': 'Verification history',
+  'mod.historyHint': 'Every verify and undo action, with the moderator who took it.',
+  'mod.historyEmpty': 'No verification actions yet.',
+  'mod.history.verify': 'verified',
+  'mod.history.unverify': 'un-verified',
+  'mod.history.by': 'by {phone}',
+  'mod.history.at': '{action} {step} · {date}',
 
   'err.generic': 'Something went wrong. Try again.',
   'err.rate_limited': 'Too many requests — try again shortly.',

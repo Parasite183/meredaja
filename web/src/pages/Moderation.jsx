@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ShieldCheck, Check, EyeOff, BadgeCheck, RotateCcw } from 'lucide-react';
+import { ShieldCheck, Check, EyeOff, BadgeCheck, RotateCcw, History } from 'lucide-react';
 import { api } from '../api.js';
 import { useI18n } from '../i18n/index.jsx';
 import { Spinner, Badge, ConfidenceBadge } from '../components/ui.jsx';
@@ -8,12 +8,14 @@ export default function Moderation() {
   const { t } = useI18n();
   const [reports, setReports] = useState(null);
   const [steps, setSteps] = useState(null);
+  const [history, setHistory] = useState(null);
 
   const load = () =>
     Promise.all([
       api('/api/moderation/reports?status=flagged').then((d) => d.reports).catch(() => []),
       api('/api/moderation/steps').then((d) => d.steps).catch(() => []),
-    ]).then(([r, s]) => { setReports(r); setSteps(s); });
+      api('/api/moderation/verifications').then((d) => d.entries).catch(() => []),
+    ]).then(([r, s, h]) => { setReports(r); setSteps(s); setHistory(h); });
   useEffect(() => { load(); }, []);
 
   async function act(id, action) {
@@ -33,7 +35,7 @@ export default function Moderation() {
     await load();
   }
 
-  if (!reports || !steps) return <Spinner label={t('common.loading')} />;
+  if (!reports || !steps || !history) return <Spinner label={t('common.loading')} />;
 
   return (
     <div className="space-y-6">
@@ -88,6 +90,36 @@ export default function Moderation() {
             ))}
           </ul>
         )}
+      </section>
+
+      {/* verification history */}
+      <section>
+        <details className="rounded-xl bg-brand-soft/50 p-3">
+          <summary className="flex cursor-pointer items-center gap-2 text-sm font-bold text-brand">
+            <History size={15} />
+            {t('mod.history')}
+          </summary>
+          <p className="mt-1 text-xs text-ink-soft">{t('mod.historyHint')}</p>
+          {history.length === 0 ? (
+            <p className="mt-2 text-sm text-ink-soft">{t('mod.historyEmpty')}</p>
+          ) : (
+            <ul className="mt-2 max-h-64 space-y-1 overflow-y-auto text-xs text-ink">
+              {history.map((e) => (
+                <li key={e.id} className="flex items-center justify-between gap-2 border-b border-line/60 pb-1">
+                  <span>
+                    <span className={e.action === 'verify' ? 'font-semibold text-ok' : 'font-semibold text-bad'}>
+                      {e.action === 'verify' ? t('mod.history.verify') : t('mod.history.unverify')}
+                    </span>{' '}
+                    <span className="font-medium">{e.process_slug}/{e.region}/{e.step_key}</span>
+                  </span>
+                  <span className="shrink-0 text-ink-soft">
+                    {t('mod.history.by', { phone: e.actor_phone })} · {new Date(e.created_at).toLocaleString()}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </details>
       </section>
 
       {/* flagged reports queue */}

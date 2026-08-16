@@ -183,6 +183,12 @@ router.post('/moderation/steps/verify', authMiddleware, requireModerator, wrap(a
      ON CONFLICT(process_slug, region, step_key) DO UPDATE SET verified_by = excluded.verified_by`,
     [slug, region, stepKey, req.user.id, nowIso()]
   );
+  // Audit: every verify action is logged (who, what, when).
+  await db.run(
+    `INSERT INTO step_verification_log (process_slug, region, step_key, action, actor_id, created_at)
+     VALUES (?, ?, ?, 'verify', ?, ?)`,
+    [slug, region, stepKey, req.user.id, nowIso()]
+  );
   ok(res, { verified: { process_slug: slug, region, step_key: stepKey } }, 201);
 }));
 
@@ -192,7 +198,28 @@ router.delete('/moderation/steps/verify', authMiddleware, requireModerator, wrap
   const region = String(req.body?.region || req.query.region || '').trim();
   const stepKey = String(req.body?.step_key || req.query.step_key || '').trim();
   await db.run('DELETE FROM step_verifications WHERE process_slug = ? AND region = ? AND step_key = ?', [slug, region, stepKey]);
+  // Audit: log the undo too.
+  await db.run(
+    `INSERT INTO step_verification_log (process_slug, region, step_key, action, actor_id, created_at)
+     VALUES (?, ?, ?, 'unverify', ?, ?)`,
+    [slug, region, stepKey, req.user.id, nowIso()]
+  );
   ok(res, { verified: false });
+}));
+
+/**
+ * Verification history: every verify/unverify action, newest first,
+ * with the acting moderator's phone. Moderators only.
+ */
+router.get('/moderation/verifications', authMiddleware, requireModerator, wrap(async (req, res) => {
+  const rows = await db.all(
+    `SELECT l.id, l.process_slug, l.region, l.step_key, l.action, l.created_at,
+            u.phone AS actor_phone
+     FROM step_verification_log l
+     LEFT JOIN users u ON u.id = l.actor_id
+     ORDER BY l.created_at DESC, l.id DESC LIMIT 200`
+  );
+  ok(res, { entries: rows });
 }));
 
 // ── moderation queue (moderators only) ───────────────────────────────

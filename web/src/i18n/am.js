@@ -188,6 +188,13 @@ export default {
   'mod.noCandidates': 'እስካሁን የሚረጋገጥ የተደገፈ እርምጃ የለም። እርምጃዎች ከ{n} የጸደቁ ሪፖርቶች በኋላ “ማህበረሰብ” ይደርሳሉ።',
   'mod.reportsOnStep': 'በዚህ እርምጃ {n} ሪፖርቶች',
   'mod.verifiedOn': 'የተረጋገጠው {date}',
+  'mod.history': 'የማረጋገጫ ታሪክ',
+  'mod.historyHint': 'እያንዳንዱ የማረጋገጥ እና የመቀልበስ እርምጃ ከወሰደው ተቆጣጣሪ ጋር።',
+  'mod.historyEmpty': 'እስካሁን የማረጋገጫ እርምጃ የለም።',
+  'mod.history.verify': 'አረጋግጧል',
+  'mod.history.unverify': 'አረጋግጦ ቀልቧል',
+  'mod.history.by': 'በ{phone}',
+  'mod.history.at': '{action} {step} · {date}',
 
   'err.generic': 'አንድ ነገር ተሳስቷል። እንደገና ይሞክሩ።',
   'err.rate_limited': 'በጣም ብዙ ጥያቄዎች — በቅርቡ እንደገና ይሞክሩ።',
