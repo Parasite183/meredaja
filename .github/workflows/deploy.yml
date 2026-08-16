@@ -1,0 +1,63 @@
+# ─────────────────────────────────────────────────────────────────────
+# Auto-deploy to Cloudflare on every push to `main`.
+#
+#   1. run server tests
+#   2. deploy the API Worker (wrangler deploy — D1 + R2 bindings)
+#   3. build the React app and deploy web/dist to Cloudflare Pages
+#   4. regenerate + apply the demo seed to D1 (so process-library
+#      edits in server/data/processes/*.json reach production)
+#
+# Secrets required on the repo:
+#   CLOUDFLARE_API_TOKEN  — API token with Worker + Pages + D1 + R2 edit
+#                           permissions for the account (create in the
+#                           Cloudflare dashboard, "Edit Cloudflare Workers")
+#   CLOUDFLARE_ACCOUNT_ID — the account id (see wrangler whoami)
+#
+# JWT_SECRET / MEREDAJA_ENC_KEY and the SMS credentials are set once via
+# `wrangler secret put` and are NOT part of this workflow.
+# ─────────────────────────────────────────────────────────────────────
+name: Deploy to Cloudflare
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Run server tests
+        run: npm test
+
+      - name: Deploy API worker
+        run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Build web app
+        run: npm run build -w web
+
+      - name: Deploy to Cloudflare Pages
+        run: npx wrangler pages deploy web/dist --project-name meredaja
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Sync demo seed to D1
+        run: |
+          node server/scripts/dump-seed-sql.mjs
+          npx wrangler d1 execute meredaja-db --remote --file=server/seed-d1.sql
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
