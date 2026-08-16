@@ -1,0 +1,214 @@
+{
+  "slug": "construction-permit",
+  "version": 1,
+  "category": "license",
+  "name": {
+    "en": "Construction / Building Permit",
+    "am": "የግንባታ / የህንፃ ፈቃድ"
+  },
+  "summary": {
+    "en": "Get permission to build or renovate a building. The city checks your land ownership, your drawings against zoning and safety rules, then issues a permit you must display on site. Required before any foundation work.",
+    "am": "ህንፃ ለመገንባት ወይም ለማደስ የግንባታ ፈቃድ ያግኙ። ከተማው የመሬት ባለቤትነትዎንና ስዕሎችዎን ይመረምራል፣ ከዚያም ፈቃድ ይሰጣል።"
+  },
+  "default_region": "addis_ababa",
+  "steps": [
+    {
+      "key": "confirm-land-title",
+      "order": 1,
+      "title": {
+        "en": "Confirm your land ownership / leasehold title",
+        "am": "የመሬት ባለቤትነት / የኪራይ ይዞታ ማረጋገጫ"
+      },
+      "description": {
+        "en": "You can only build on land you legally own or hold under leasehold. Collect your title deed or leasehold agreement, confirm the plot number and that no encumbrance (mortgage, dispute, government expropriation notice) blocks construction.",
+        "am": "በህጋዊ መንገድ በባለቤትነት ወይም በኪራይ ይዞታ ባለዎት መሬት ላይ ብቻ መገንባት ይችላሉ።"
+      },
+      "responsible_office": {
+        "en": "City / sub-city land administration office",
+        "am": "የከተማ / የክፍለ ከተማ የመሬት አስተዳደር ጽህፈት ቤት"
+      },
+      "official_timeline": {
+        "en": "1–3 working days (verification visit may be scheduled)",
+        "am": "ከ1–3 የስራ ቀናት"
+      },
+      "required_documents": [
+        { "type": "lease_agreement", "label": { "en": "Title deed or leasehold agreement (original + copy)", "am": "የባለቤትነት ወረቀት ወይም የኪራይ ውል (መጀመሪያ + ቅጂ)" } },
+        { "type": "national_id", "label": { "en": "National ID / Kebele ID (original + copy)", "am": "የመታወቂያ ካርድ (መጀመሪያ + ቅጂ)" } },
+        { "type": "tax_clearance", "label": { "en": "Property tax clearance for the plot (if held long-term)", "am": "የንብረት ግብር ማረጋገጫ" } }
+      ]
+    },
+    {
+      "key": "hire-design-professionals",
+      "order": 2,
+      "title": {
+        "en": "Hire a licensed architect and engineer",
+        "am": "ፈቃድ ያላቸው አርክቴክትና መሀንዲስ ይቅጠሩ"
+      },
+      "description": {
+        "en": "The city only accepts drawings signed and stamped by professionals licensed in Ethiopia. You need an architect for the architectural drawings and a structural engineer for the structural design. Keep their licenses and certificates — you must submit copies with the application.",
+        "am": "ከተማው በኢትዮጵያ ፈቃድ ያላቸው ባለሙያዎች የተፈረሙና የታሸጉ ስዕሎችን ብቻ ይቀበላል።"
+      },
+      "responsible_office": {
+        "en": "Yourself (private professionals — verify their licenses)",
+        "am": "እርስዎ ራስዎ (የግል ባለሙያዎች — ፈቃዳቸውን ያረጋግጡ)"
+      },
+      "official_timeline": {
+        "en": "1–4 weeks (their schedule)",
+        "am": "ከ1–4 ሳምንታት"
+      },
+      "required_documents": [
+        { "type": "business_docs", "label": { "en": "Architect's professional license (copy)", "am": "የአርክቴክት ፈቃድ (ቅጂ)" } },
+        { "type": "business_docs", "label": { "en": "Structural engineer's professional license (copy)", "am": "የመዋቅር መሀንዲስ ፈቃድ (ቅጂ)" } }
+      ]
+    },
+    {
+      "key": "prepare-drawings",
+      "order": 3,
+      "title": {
+        "en": "Prepare architectural and structural drawings",
+        "am": "የስነ-ህንፃና የመዋቅር ስዕሎችን ያዘጋጁ"
+      },
+      "description": {
+        "en": "Your architect prepares the site plan, floor plans, elevations and sections; the engineer prepares the structural design. The drawings must match the plot and comply with the local building code, zoning rules (setbacks, height limits, floor-area ratio) and, in Addis, the Oromia Special Zone / city master plan requirements.",
+        "am": "አርክቴክትዎ የቦታ እቅድ፣ የወለል እቅዶችና ንድፎችን ያዘጋጃል፤ መሀንዲሱ ደግሞ የመዋቅር ንድፍ ያዘጋጃል።"
+      },
+      "responsible_office": {
+        "en": "Yourself (via your architect/engineer)",
+        "am": "እርስዎ (በአርክቴክትዎ / መሀንዲስዎ በኩል)"
+      },
+      "official_timeline": {
+        "en": "1–4 weeks (professional drafting time)",
+        "am": "ከ1–4 ሳምንታት"
+      },
+      "required_documents": [
+        { "type": "business_docs", "label": { "en": "Site plan (signed by architect)", "am": "የቦታ እቅድ (በአርክቴክት የተፈረመ)" } },
+        { "type": "business_docs", "label": { "en": "Architectural drawings (floor plans, elevations, sections)", "am": "የስነ-ህንፃ ስዕሎች" } },
+        { "type": "business_docs", "label": { "en": "Structural drawings & design calculations (by engineer)", "am": "የመዋቅር ስዕሎችና ስሌቶች" } }
+      ]
+    },
+    {
+      "key": "submit-application",
+      "order": 4,
+      "title": {
+        "en": "Submit the permit application",
+        "am": "የፈቃድ ማመልከቻውን ያቅርቡ"
+      },
+      "description": {
+        "en": "Submit the application form with all drawings and documents at the city construction permit office. Pay the application fee, get a receipt and a file/reference number. Missing or inconsistent documents are the most common reason the file is returned unread.",
+        "am": "የማመልከቻ ቅጹን ከሁሉም ስዕሎችና ሰነዶች ጋር በከተማው የግንባታ ፈቃድ ጽህፈት ቤት ያቅርቡ።"
+      },
+      "responsible_office": {
+        "en": "City construction permit office (sub-city branch in Addis Ababa)",
+        "am": "የከተማ የግንባታ ፈቃድ ጽህፈት ቤት"
+      },
+      "official_timeline": {
+        "en": "1 working day to file",
+        "am": "1 የስራ ቀን"
+      },
+      "required_documents": [
+        { "type": "application_receipt", "label": { "en": "Application form (from the permit office)", "am": "የማመልከቻ ቅጽ" } },
+        { "type": "lease_agreement", "label": { "en": "Title deed / leasehold copy", "am": "የባለቤትነት ወረቀት ቅጂ" } },
+        { "type": "business_docs", "label": { "en": "Full drawing set (site plan + architectural + structural)", "am": "ሙሉ ስዕሎች" } },
+        { "type": "business_docs", "label": { "en": "Professional licenses of architect & engineer (copies)", "am": "የባለሙያዎች ፈቃዶች (ቅጂዎች)" } },
+        { "type": "national_id", "label": { "en": "Applicant ID (original + copy)", "am": "የአመልካች መታወቂያ" } },
+        { "type": "payment_receipt", "label": { "en": "Application fee receipt", "am": "የማመልከቻ ክፍያ ደረሰኝ" } }
+      ]
+    },
+    {
+      "key": "technical-review",
+      "order": 5,
+      "title": {
+        "en": "Technical review by the permit committee",
+        "am": "በፈቃድ ኮሚቴ የቴክኒክ ግምገማ"
+      },
+      "description": {
+        "en": "Engineers at the permit office review the drawings against the building code and zoning rules. You may be called in to answer questions or asked to revise drawings. Revisions are common — budget for at least one round.",
+        "am": "በፈቃድ ጽህፈት ቤቱ መሀንዲሶች ስዕሎቹን ከህንፃ ኮድና የዞን ህጎች ጋር ይመረምራሉ።"
+      },
+      "responsible_office": {
+        "en": "City construction permit office — technical review team",
+        "am": "የከተማ የግንባታ ፈቃድ ጽህፈት ቤት — የቴክኒክ ግምገማ ቡድን"
+      },
+      "official_timeline": {
+        "en": "1–6 weeks (complex projects longer)",
+        "am": "ከ1–6 ሳምንታት"
+      },
+      "required_documents": [
+        { "type": "application_receipt", "label": { "en": "File / reference number", "am": "የፋይል / ማጣቀሻ ቁጥር" } }
+      ]
+    },
+    {
+      "key": "pay-and-collect",
+      "order": 6,
+      "title": {
+        "en": "Pay the permit fee and collect your permit",
+        "am": "ክፍያውን ይክፈሉና ፈቃድዎን ይቀበሉ"
+      },
+      "description": {
+        "en": "Once approved, pay the building permit fee (scaled by floor area and use) at the designated bank/cashier, then return with the receipt to collect the permit. Display the permit at the construction site before starting work — inspectors check for it.",
+        "am": "ከጸደቀ በኋላ የግንባታ ፈቃድ ክፍያውን ይክፈሉ፣ ከዚያም በደረሰኝ ተመልሰው ፈቃድዎን ይቀበሉ።"
+      },
+      "responsible_office": {
+        "en": "City construction permit office — issuance desk",
+        "am": "የከተማ የግንባታ ፈቃድ ጽህፈት ቤት — የመስጫ ዴስክ"
+      },
+      "official_timeline": {
+        "en": "1–3 working days after approval",
+        "am": "ከጸደቀ በኋላ ከ1–3 የስራ ቀናት"
+      },
+      "required_documents": [
+        { "type": "payment_receipt", "label": { "en": "Permit fee payment receipt", "am": "የክፍያ ደረሰኝ" } }
+      ]
+    }
+  ],
+  "common_rejection_reasons": [
+    { "en": "Land ownership / leasehold not verified or under dispute", "am": "የመሬት ባለቤትነት አልተረጋገጠም ወይም በክርክር ላይ ነው" },
+    { "en": "Drawings not signed/stamped by a licensed professional", "am": "ስዕሎች በፈቃድ ባለሙያ አልተፈረሙም" },
+    { "en": "Zoning violations: setback, height limit, or floor-area ratio exceeded", "am": "የዞን ህግ ጥሰት: ከፍታ ገደብ ወይም የቦታ ምጥጥን ተላልፏል" },
+    { "en": "Drawings do not match the plot size or shape", "am": "ስዕሎች ከመሬቱ መጠን ጋር አይዛመዱም" },
+    { "en": "Incomplete file: missing forms, receipts, or document copies", "am": "ያልተሟላ ፋይል" },
+    { "en": "Building use not permitted in that zone (e.g. commercial in residential-only area)", "am": "የህንፃ አገልግሎት በዞኑ አይፈቀድም" }
+  ],
+  "regions": {
+    "addis_ababa": {
+      "notes": {
+        "en": "Addis Ababa sub-city construction permit offices handle applications up to a size threshold; larger projects go to the central Addis Ababa City Administration permit office. Setbacks and height rules follow the city master plan — check your plot's zone before drafting.",
+        "am": "የአዲስ አበባ ክፍለ ከተማ የግንባታ ፈቃድ ጽህፈት ቤቶች ማመልከቻዎችን ይቀበላሉ፤ ትላልቅ ፕሮጀክቶች ወደ ማዕከላዊ ጽህፈት ቤት ይሄዳሉ።"
+      }
+    },
+    "bahir_dar": {
+      "notes": {
+        "en": "Handled by the Amhara Region / Bahir Dar City construction permit office. Rural-urban land administration differs — confirm your plot's status (urban vs. peri-urban) first.",
+        "am": "በባህር ዳር ከተማ የግንባታ ፈቃድ ጽህፈት ቤት ይከናወናል።"
+      },
+      "step_overrides": {
+        "confirm-land-title": {
+          "responsible_office": { "en": "Bahir Dar City land administration office" }
+        },
+        "submit-application": {
+          "responsible_office": { "en": "Bahir Dar City construction permit office" }
+        },
+        "pay-and-collect": {
+          "responsible_office": { "en": "Bahir Dar City construction permit office" }
+        }
+      }
+    },
+    "hawassa": {
+      "notes": {
+        "en": "Handled by the Sidama Region / Hawassa City construction permit office. Same federal building code applies; local zoning rules differ.",
+        "am": "በሲዳማ ክልል / አዋሳ ከተማ የግንባታ ፈቃድ ጽህፈት ቤት ይከናወናል።"
+      },
+      "step_overrides": {
+        "confirm-land-title": {
+          "responsible_office": { "en": "Hawassa City land administration office" }
+        },
+        "submit-application": {
+          "responsible_office": { "en": "Hawassa City construction permit office" }
+        },
+        "pay-and-collect": {
+          "responsible_office": { "en": "Hawassa City construction permit office" }
+        }
+      }
+    }
+  }
+}

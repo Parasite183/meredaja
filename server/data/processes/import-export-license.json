@@ -1,0 +1,203 @@
+{
+  "slug": "import-export-license",
+  "version": 1,
+  "category": "license",
+  "name": {
+    "en": "Import / Export License",
+    "am": "የመግቢያ / የመውጫ ፈቃድ"
+  },
+  "summary": {
+    "en": "Get a license to import goods into or export goods out of Ethiopia from the Ministry of Trade and Regional Integration. You need an existing trade license and TIN first — this permit adds import/export as an activity.",
+    "am": "ከንግድና ክልላዊ ውህደት ሚኒስቴር ወደ ኢትዮጵያ ለማስገባት ወይም ለማስወጣት ፈቃድ ያግኙ። መጀመሪያ የንግድ ፈቃድና ታቢ ሊኖርዎት ይገባል።"
+  },
+  "default_region": "addis_ababa",
+  "steps": [
+    {
+      "key": "check-trade-license",
+      "order": 1,
+      "title": {
+        "en": "Confirm your trade license covers the activity",
+        "am": "የንግድ ፈቃድዎ እንቅስቃሴውን መሸፈኑን ያረጋግጡ"
+      },
+      "description": {
+        "en": "Import/export permits are issued on top of a valid trade license whose activity list includes importing or exporting. If your current license doesn't list it, amend the trade license first at your sub-city trade office (activity addition).",
+        "am": "የመግቢያ/መውጫ ፈቃድ የሚሰጠው ንግድ ማስመጣትን ወይም ማስወጣትን በሚያካትት ህጋዊ የንግድ ፈቃድ ላይ ነው።"
+      },
+      "responsible_office": {
+        "en": "Sub-city Trade and Industry Development Office",
+        "am": "የክፍለ ከተማ ንግድና ኢንዱስትሪ ልማት ጽህፈት ቤት"
+      },
+      "official_timeline": {
+        "en": "1–3 working days (only if an amendment is needed)",
+        "am": "ከ1–3 የስራ ቀናት"
+      },
+      "required_documents": [
+        { "type": "name_certificate", "label": { "en": "Current trade license (copy)", "am": "የንግድ ፈቃድ (ቅጂ)" } },
+        { "type": "tin_certificate", "label": { "en": "TIN certificate", "am": "የታቢ የምስክር ወረቀት" } }
+      ]
+    },
+    {
+      "key": "get-tin-and-clearance",
+      "order": 2,
+      "title": {
+        "en": "Get a TIN and tax clearance",
+        "am": "ታቢ ቁጥርና የግብር ማረጋገጫ ያግኙ"
+      },
+      "description": {
+        "en": "Your business needs an active TIN with no outstanding tax obligations. Request a tax clearance certificate from the Ministry of Revenues — most import/export applications require it, and customs will demand it at clearance time anyway.",
+        "am": "ንግድዎ ያለ የቀረ ግብር ንቁ ታቢ ቁጥር ሊኖረው ይገባል።"
+      },
+      "responsible_office": {
+        "en": "Ministry of Revenues (branch office)",
+        "am": "የገቢዎች ሚኒስቴር (ቅርንጫፍ ጽህፈት ቤት)"
+      },
+      "official_timeline": {
+        "en": "Same day – 1 week",
+        "am": "በዚያው ቀን – 1 ሳምንት"
+      },
+      "required_documents": [
+        { "type": "tin_certificate", "label": { "en": "TIN certificate", "am": "የታቢ የምስክር ወረቀት" } },
+        { "type": "tax_clearance", "label": { "en": "Tax clearance certificate", "am": "የግብር ማረጋገጫ የምስክር ወረቀት" } }
+      ]
+    },
+    {
+      "key": "identify-commodity",
+      "order": 3,
+      "title": {
+        "en": "Identify your commodity category and restrictions",
+        "am": "የሸቀጥ ምድብዎንና ገደቦችን ይለዩ"
+      },
+      "description": {
+        "en": "Check whether the goods you plan to import/export are restricted, require a separate permit (pharmaceuticals, food, arms, chemicals, plants/animals), or are banned. The Ministry of Trade publishes the list; customs can also confirm. Restricted goods need extra approvals before the license is issued.",
+        "am": "ለማስገባት/ለማስወጣት ያቀዱት ሸቀጦች የተገደቡ፣ የተለየ ፈቃድ የሚፈልጉ ወይም የተከለከሉ መሆናቸውን ያረጋግጡ።"
+      },
+      "responsible_office": {
+        "en": "Ministry of Trade and Regional Integration (MoTRI) — trade facilitation directorate",
+        "am": "የንግድና ክልላዊ ውህደት ሚኒስቴር"
+      },
+      "official_timeline": {
+        "en": "1–2 working days (research; no office visit usually needed)",
+        "am": "ከ1–2 የስራ ቀናት"
+      },
+      "required_documents": [
+        { "type": "business_plan", "label": { "en": "List of goods to be imported/exported with HS codes (if known)", "am": "የሸቀጦች ዝርዝር" } }
+      ]
+    },
+    {
+      "key": "prepare-application",
+      "order": 4,
+      "title": {
+        "en": "Prepare the application file",
+        "am": "የማመልከቻ ፋይሉን ያዘጋጁ"
+      },
+      "description": {
+        "en": "Assemble the application: the import/export license application form, trade license, TIN, tax clearance, ID copies, photos, and a description of the business and the goods. For companies, include the memorandum of association and board resolution.",
+        "am": "የማመልከቻ ቅጹን፣ የንግድ ፈቃድ፣ ታቢ፣ የግብር ማረጋገጫና ፎቶዎችን ያዘጋጁ።"
+      },
+      "responsible_office": {
+        "en": "Yourself (no office visit needed for this step)",
+        "am": "እርስዎ ራስዎ (ለዚህ እርምጃ ቢሮ መሄድ አያስፈልግም)"
+      },
+      "official_timeline": {
+        "en": "Half a day",
+        "am": "ግማሽ ቀን"
+      },
+      "required_documents": [
+        { "type": "name_certificate", "label": { "en": "Import/export application form (from MoTRI)", "am": "የማመልከቻ ቅጽ" } },
+        { "type": "name_certificate", "label": { "en": "Trade license (copy)", "am": "የንግድ ፈቃድ (ቅጂ)" } },
+        { "type": "tin_certificate", "label": { "en": "TIN certificate", "am": "የታቢ የምስክር ወረቀት" } },
+        { "type": "tax_clearance", "label": { "en": "Tax clearance certificate", "am": "የግብር ማረጋገጫ" } },
+        { "type": "national_id", "label": { "en": "Applicant ID / passport (original + copy)", "am": "የአመልካች መታወቂያ" } },
+        { "type": "passport_photo", "label": { "en": "Passport-size photos (2)", "am": "የፓስፖርት መጠን ፎቶ (2)" } },
+        { "type": "business_docs", "label": { "en": "Memorandum of association + board resolution (companies only)", "am": "የማህበር ስምምነት (ለኩባንያዎች)" } }
+      ]
+    },
+    {
+      "key": "submit-and-pay",
+      "order": 5,
+      "title": {
+        "en": "Submit at MoTRI and pay the license fee",
+        "am": "በሚኒስቴሩ ያቅርቡና የፈቃድ ክፍያውን ይክፈሉ"
+      },
+      "description": {
+        "en": "Submit the file at the Ministry of Trade and Regional Integration (the import/export licensing desk). Pay the license fee at the designated bank/cashier and attach the receipt. You'll get a reference number to track the review.",
+        "am": "ፋይሉን በንግድና ክልላዊ ውህደት ሚኒስቴር የመግቢያ/መውጫ ፈቃድ ዴስክ ያቅርቡ።"
+      },
+      "responsible_office": {
+        "en": "Ministry of Trade and Regional Integration — import/export licensing desk",
+        "am": "የንግድና ክልላዊ ውህደት ሚኒስቴር — የፈቃድ ዴስክ"
+      },
+      "official_timeline": {
+        "en": "1 working day to file",
+        "am": "1 የስራ ቀን"
+      },
+      "required_documents": [
+        { "type": "application_receipt", "label": { "en": "Completed application + all copies", "am": "የተሞላ ማመልከቻ" } },
+        { "type": "payment_receipt", "label": { "en": "License fee payment receipt", "am": "የክፍያ ደረሰኝ" } }
+      ]
+    },
+    {
+      "key": "receive-license",
+      "order": 6,
+      "title": {
+        "en": "Receive your import/export license",
+        "am": "የመግቢያ/መውጫ ፈቃድዎን ይቀበሉ"
+      },
+      "description": {
+        "en": "The Ministry reviews the file and issues the license (or asks for corrections). Collect it in person with your ID and receipt. Keep copies for customs — you'll present the license at every border clearance.",
+        "am": "ሚኒስቴሩ ፋይሉን ገምግሞ ፈቃዱን ይሰጣል ወይም እርማት ይጠይቃል።"
+      },
+      "responsible_office": {
+        "en": "Ministry of Trade and Regional Integration — issuance desk",
+        "am": "የንግድና ክልላዊ ውህደት ሚኒስቴር — የመስጫ ዴስክ"
+      },
+      "official_timeline": {
+        "en": "3–10 working days",
+        "am": "ከ3–10 የስራ ቀናት"
+      },
+      "required_documents": [
+        { "type": "application_receipt", "label": { "en": "Application reference number", "am": "የማመልከቻ ማጣቀሻ ቁጥር" } },
+        { "type": "national_id", "label": { "en": "ID (for collection)", "am": "መታወቂያ (ለመቀበል)" } },
+        { "type": "payment_receipt", "label": { "en": "Payment receipt (if not already attached)", "am": "የክፍያ ደረሰኝ" } }
+      ]
+    }
+  ],
+  "common_rejection_reasons": [
+    { "en": "Trade license does not include import/export activity", "am": "የንግድ ፈቃድ የመግቢያ/መውጫ እንቅስቃሴን አያካትትም" },
+    { "en": "Outstanding tax obligations — no tax clearance issued", "am": "የቀረ ግብር አለ" },
+    { "en": "Goods category requires a separate permit that wasn't obtained", "am": "የሸቀጥ ምድቡ የተለየ ፈቃድ ይፈልጋል" },
+    { "en": "Restricted or banned goods attempted under a general license", "am": "የተከለከሉ ሸቀጦች" },
+    { "en": "Company documents (memorandum, resolution) missing or expired", "am": "የኩባንያ ሰነዶች የሉም ወይም ጊዜያቸው አልፏል" },
+    { "en": "Inconsistent details between trade license, TIN and application", "am": "በሰነዶች መካከል የማይጣጣሙ ዝርዝሮች" }
+  ],
+  "regions": {
+    "addis_ababa": {
+      "notes": {
+        "en": "The import/export license is a federal process — filed at MoTRI in Addis Ababa regardless of where your business is registered. Addis residents can walk in; businesses from other regions usually send a representative or use a licensed customs clearing agent.",
+        "am": "የመግቢያ/መውጫ ፈቃድ የፌደራል ሂደት ነው — ንግድዎ የተመዘገበበት ቦታ ምንም ይሁን ምን በአዲስ አበባ በሚኒስቴሩ ይቀርባል።"
+      }
+    },
+    "bahir_dar": {
+      "notes": {
+        "en": "Federal process filed at MoTRI Addis Ababa. Local support: the Amhara Region Trade Bureau in Bahir Dar can pre-check your file and confirm commodity restrictions before you travel.",
+        "am": "የፌደራል ሂደት በአዲስ አበባ በሚኒስቴሩ ይቀርባል። በባህር ዳር የአማራ ክልል የንግድ ቢሮ ፋይሉን አስቀድሞ ማጣራት ይችላል።"
+      },
+      "step_overrides": {
+        "check-trade-license": {
+          "responsible_office": { "en": "Amhara Region Trade Bureau, Bahir Dar branch" }
+        }
+      }
+    },
+    "dire_dawa": {
+      "notes": {
+        "en": "Dire Dawa is a federal city and a trade gateway (Ethio-Djibouti railway corridor) — many importers register here. The trade license step runs through the Dire Dawa city trade office; the import/export license itself is still filed federally in Addis.",
+        "am": "ድሬ ዳዋ የፌደራል ከተማና የንግድ መግቢያ በር ናት።"
+      },
+      "step_overrides": {
+        "check-trade-license": {
+          "responsible_office": { "en": "Dire Dawa City Trade and Industry Development Office" }
+        }
+      }
+    }
+  }
+}
