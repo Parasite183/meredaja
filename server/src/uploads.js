@@ -131,15 +131,16 @@ export const uploadDocument = multer({ storage: memoryStorage, fileFilter, limit
 
 // ── access control for serving uploads ───────────────────────────────
 // The /uploads route is mounted behind this gate. Documents belong to
-// exactly one user: only the owner (or a moderator reviewing reports
-// that reference a file) may read them.
+// exactly one user: only the owner may read them. There is NO moderator
+// bypass here — no moderation task needs to view a user's private
+// documents, so a blanket override would just be a standing backdoor
+// (see the matching note in routes/documents.js).
 export function requireUploadAccess() {
   return async (req, res, next) => {
     try {
       const key = decodeURIComponent(req.path.replace(/^\/+/, ''));
       if (!key) return next();
       if (!req.user) return res.status(401).json({ error: 'Not authenticated', code: 'unauthorized' });
-      if (req.user.is_moderator) return next();
 
       const kind = key.split('/')[0];
       if (kind === 'documents') {

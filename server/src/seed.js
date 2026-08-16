@@ -22,7 +22,15 @@ import { syncProcessLibrary } from './processes.js';
 const DAY = 86400_000;
 const daysAgo = (n) => new Date(Date.now() - n * DAY).toISOString();
 
-const DEMO_USER = { phone: '+251911000001', name: 'Demo User (Abebe)', is_moderator: 1 };
+// Three demo users so the seeded reports come from DISTINCT reporters —
+// promotion counts COUNT(DISTINCT user_id), so a step must be
+// corroborated by different people, not by one account's report volume.
+const DEMO_USERS = [
+  { phone: '+251911000001', name: 'Demo User (Abebe)', is_moderator: 1 },
+  { phone: '+251911000002', name: 'Demo User (Chaltu)', is_moderator: 0 },
+  { phone: '+251911000003', name: 'Demo User (Biruk)', is_moderator: 0 },
+];
+const DEMO_USER = DEMO_USERS[0];
 
 /** Minimal valid PNG bytes (1×1 transparent) for a seed document. */
 function tinyPng() {
@@ -85,12 +93,17 @@ export async function runSeed() {
     return;
   }
 
-  // ── demo user ──────────────────────────────────────────────────────
-  const { lastId: userId } = await db.run(
-    `INSERT INTO users (phone, name, is_moderator, device_fingerprint, signup_ip, last_ip, created_at)
-     VALUES (?, ?, ?, 'seed', '127.0.0.1', '127.0.0.1', ?)`,
-    [DEMO_USER.phone, DEMO_USER.name, DEMO_USER.is_moderator, daysAgo(30)]
-  );
+  // ── demo users ─────────────────────────────────────────────────────
+  const userIds = {};
+  for (const u of DEMO_USERS) {
+    const { lastId } = await db.run(
+      `INSERT INTO users (phone, name, is_moderator, device_fingerprint, signup_ip, last_ip, created_at)
+       VALUES (?, ?, ?, 'seed', '127.0.0.1', '127.0.0.1', ?)`,
+      [u.phone, u.name, u.is_moderator, daysAgo(30)]
+    );
+    userIds[u.phone] = lastId;
+  }
+  const userId = userIds[DEMO_USER.phone];
 
   // ── checklist 1: trade license (Addis Ababa), 2/5 steps done ───────
   const { lastId: cl1 } = await db.run(
@@ -124,30 +137,34 @@ export async function runSeed() {
   // ── sample vault document (PNG) + attachments to both checklists ───
   await seedDemoVault();
 
-  // ── sample community step reports (approved) ───────────────────────
+  // ── sample community step reports (approved, DISTINCT reporters) ───
+  // Each row names its reporter by demo-user index (0=Abebe, 1=Chaltu,
+  // 2=Biruk). prepare-lease deliberately has 3 reports from 3 different
+  // people so the demo still shows a best_effort step auto-promoted to
+  // community under the distinct-reporter rule.
   const REPORTS = [
-    // [process_slug, region, step_key, waitDays, office, waived, note, daysAgo]
-    ['trade-license', 'addis_ababa', 'register-name', 2, 'Bole sub-city', 0, 'Fast — the name check desk had the registry open.', 20],
-    ['trade-license', 'addis_ababa', 'register-name', 5, 'Kirkos sub-city', 0, 'Long queue, went twice. Bring 3 name alternatives.', 12],
-    ['trade-license', 'addis_ababa', 'get-tin', 1, 'Bole MoR branch', 0, 'Same-day TIN for individuals.', 15],
-    ['trade-license', 'addis_ababa', 'get-tin', 3, 'Central MoR branch', 0, 'Busy month — took 3 days.', 9],
-    ['trade-license', 'addis_ababa', 'prepare-lease', 7, 'Notary at Addis Ketema', 0, 'Notary queue was the bottleneck.', 18],
-    ['trade-license', 'addis_ababa', 'prepare-lease', 10, 'Notary at Merkato', 1, 'Landlord\'s tax clearance was waived — brought ID copy only.', 16],
-    ['trade-license', 'addis_ababa', 'prepare-lease', 5, 'Private notary office', 0, 'Private notaries are faster than the court notary queue.', 13],
-    ['trade-license', 'addis_ababa', 'submit-application', 14, 'Yeka sub-city', 0, 'Application sat for 2 weeks; follow up in person.', 8],
-    ['trade-license', 'addis_ababa', 'pay-and-collect', 3, 'Yeka sub-city', 0, 'Fee paid at CBE, license ready 3 days later.', 6],
-    ['business-name', 'addis_ababa', 'check-availability', 0, 'Online registry', 0, 'Checked online from home — no office visit needed.', 25],
-    ['business-name', 'addis_ababa', 'submit-name-application', 3, 'Arada sub-city', 0, 'Straightforward. Take copies of everything.', 14],
-    ['business-name', 'addis_ababa', 'collect-certificate', 4, 'Arada sub-city', 0, 'Certificate took longer than promised.', 10],
-    ['tin-registration', 'addis_ababa', 'visit-revenues-office', 1, 'Nifas Silk sub-city tax office', 0, 'Queue number system works well in the morning.', 22],
-    ['tin-registration', 'addis_ababa', 'receive-tin', 2, 'Nifas Silk sub-city tax office', 0, 'Same-day issue for individuals, 2 days for business TIN.', 11],
+    // [process_slug, region, step_key, waitDays, office, waived, note, daysAgo, reporter]
+    ['trade-license', 'addis_ababa', 'register-name', 2, 'Bole sub-city', 0, 'Fast — the name check desk had the registry open.', 20, 0],
+    ['trade-license', 'addis_ababa', 'register-name', 5, 'Kirkos sub-city', 0, 'Long queue, went twice. Bring 3 name alternatives.', 12, 1],
+    ['trade-license', 'addis_ababa', 'get-tin', 1, 'Bole MoR branch', 0, 'Same-day TIN for individuals.', 15, 0],
+    ['trade-license', 'addis_ababa', 'get-tin', 3, 'Central MoR branch', 0, 'Busy month — took 3 days.', 9, 2],
+    ['trade-license', 'addis_ababa', 'prepare-lease', 7, 'Notary at Addis Ketema', 0, 'Notary queue was the bottleneck.', 18, 0],
+    ['trade-license', 'addis_ababa', 'prepare-lease', 10, 'Notary at Merkato', 1, 'Landlord\'s tax clearance was waived — brought ID copy only.', 16, 1],
+    ['trade-license', 'addis_ababa', 'prepare-lease', 5, 'Private notary office', 0, 'Private notaries are faster than the court notary queue.', 13, 2],
+    ['trade-license', 'addis_ababa', 'submit-application', 14, 'Yeka sub-city', 0, 'Application sat for 2 weeks; follow up in person.', 8, 1],
+    ['trade-license', 'addis_ababa', 'pay-and-collect', 3, 'Yeka sub-city', 0, 'Fee paid at CBE, license ready 3 days later.', 6, 0],
+    ['business-name', 'addis_ababa', 'check-availability', 0, 'Online registry', 0, 'Checked online from home — no office visit needed.', 25, 0],
+    ['business-name', 'addis_ababa', 'submit-name-application', 3, 'Arada sub-city', 0, 'Straightforward. Take copies of everything.', 14, 1],
+    ['business-name', 'addis_ababa', 'collect-certificate', 4, 'Arada sub-city', 0, 'Certificate took longer than promised.', 10, 2],
+    ['tin-registration', 'addis_ababa', 'visit-revenues-office', 1, 'Nifas Silk sub-city tax office', 0, 'Queue number system works well in the morning.', 22, 0],
+    ['tin-registration', 'addis_ababa', 'receive-tin', 2, 'Nifas Silk sub-city tax office', 0, 'Same-day issue for individuals, 2 days for business TIN.', 11, 1],
   ];
-  for (const [ps, region, stepKey, wait, office, waived, note, ago] of REPORTS) {
+  for (const [ps, region, stepKey, wait, office, waived, note, ago, reporter] of REPORTS) {
     await db.run(
       `INSERT INTO step_reports
          (process_slug, region, step_key, user_id, actual_wait_estimate, office_location, requirement_waived, note, moderation_status, created_at)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'approved', ?)`,
-      [ps, region, stepKey, userId, wait, office, waived, note, daysAgo(ago)]
+      [ps, region, stepKey, userIds[DEMO_USERS[reporter].phone], wait, office, waived, note, daysAgo(ago)]
     );
   }
 

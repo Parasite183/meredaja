@@ -65,10 +65,12 @@ async function main() {
   // checklists, and their step reports are never wiped by a re-deploy.
   // sessions / otp_codes are transient and not part of the seed.
   //
-  // The demo user's reports ARE refreshed: INSERT OR IGNORE would skip
-  // them forever once their ids exist remotely, so drop that user's
-  // reports first (subquery by phone — never touches real users).
-  lines.push("DELETE FROM step_reports WHERE user_id = (SELECT id FROM users WHERE phone = '+251911000001');");
+  // The demo users' reports ARE refreshed: INSERT OR IGNORE would skip
+  // them forever once their ids exist remotely, so drop those users'
+  // reports first (subquery by phone — never touches real users). The
+  // three demo users are the distinct reporters behind the demo's
+  // promoted step (see seed.js).
+  lines.push("DELETE FROM step_reports WHERE user_id IN (SELECT id FROM users WHERE phone IN ('+251911000001', '+251911000002', '+251911000003'));");
   lines.push('');
 
   for (const t of ['processes', 'users', 'user_checklists', 'checklist_step_status', 'step_reports']) {

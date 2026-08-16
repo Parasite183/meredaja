@@ -29,12 +29,17 @@ async function rowFor(slug) {
   return db.get('SELECT * FROM processes WHERE slug = ? ORDER BY version DESC LIMIT 1', [slug]);
 }
 
-function addReport(processSlug, stepKey, status = 'approved') {
+// Distinct reporter ids — the whole point of the promotion rule is that
+// a step needs corroboration from DIFFERENT people, so tests must pass
+// explicit user ids and never share one across reports that are meant to
+// count together.
+let nextReporterId = 1000;
+function addReport(processSlug, stepKey, { status = 'approved', user_id = nextReporterId++, region = 'addis_ababa' } = {}) {
   return db.run(
     `INSERT INTO step_reports
        (process_slug, region, step_key, user_id, actual_wait_estimate, office_location, requirement_waived, note, moderation_status, created_at)
-     VALUES (?, 'addis_ababa', ?, 999, 5, 'Test office', 0, 'test', ?, ?)`,
-    [processSlug, stepKey, status, new Date().toISOString()]
+     VALUES (?, ?, ?, ?, 5, 'Test office', 0, 'test', ?, ?)`,
+    [processSlug, region, stepKey, user_id, status, new Date().toISOString()]
   );
 }
 
@@ -45,15 +50,39 @@ test('best_effort step below threshold stays best_effort', async () => {
   assert.equal(step.confidence, 'best_effort');
 });
 
-test('best_effort step reaches threshold and promotes to community', async () => {
+test('3 reports from 3 DISTINCT accounts promote to community', async () => {
   const row = await rowFor('trade-license');
-  // prepare-lease is best_effort; add reports up to the threshold.
+  // prepare-lease is best_effort; add threshold reports, each from a
+  // different account (addReport defaults to a fresh user id per call).
   for (let i = 0; i < PROMOTION_THRESHOLD; i++) {
     await addReport('trade-license', 'prepare-lease');
   }
   const p = await resolveProcessWithPromotion(row, { region: 'addis_ababa' });
   const step = p.steps.find((s) => s.key === 'prepare-lease');
   assert.equal(step.confidence, 'community');
+});
+
+test('3 reports from the SAME account do NOT promote to community', async () => {
+  const row = await rowFor('tin-registration');
+  const stepKey = 'receive-tin'; // best_effort
+  const oneUser = nextReporterId++;
+  for (let i = 0; i < PROMOTION_THRESHOLD; i++) {
+    await addReport('tin-registration', stepKey, { user_id: oneUser });
+  }
+  const p = await resolveProcessWithPromotion(row, { region: 'addis_ababa' });
+  const step = p.steps.find((s) => s.key === stepKey);
+  assert.equal(step.confidence, 'best_effort', 'a single account must not be able to promote a step');
+});
+
+test('same account + one other reporter is still below the distinct threshold', async () => {
+  const row = await rowFor('construction-permit');
+  const stepKey = 'technical-review'; // best_effort
+  const oneUser = nextReporterId++;
+  for (let i = 0; i < 2; i++) await addReport('construction-permit', stepKey, { user_id: oneUser });
+  await addReport('construction-permit', stepKey, { user_id: nextReporterId++ });
+  const p = await resolveProcessWithPromotion(row, { region: 'addis_ababa' });
+  const step = p.steps.find((s) => s.key === stepKey);
+  assert.equal(step.confidence, 'best_effort', '2 distinct people is not enough even with extra report volume');
 });
 
 test('official step is never downgraded by reports', async () => {
@@ -70,7 +99,7 @@ test('flagged and hidden reports do not count toward promotion', async () => {
   const row = await rowFor('business-name');
   const stepKey = 'pay-name-fee'; // best_effort
   for (let i = 0; i < PROMOTION_THRESHOLD; i++) {
-    await addReport('business-name', stepKey, i === 0 ? 'flagged' : 'hidden');
+    await addReport('business-name', stepKey, { status: i === 0 ? 'flagged' : 'hidden' });
   }
   const p = await resolveProcessWithPromotion(row, { region: 'addis_ababa' });
   const step = p.steps.find((s) => s.key === stepKey);
@@ -81,12 +110,7 @@ test('promotion is region-scoped: reports in another region do not promote', asy
   const row = await rowFor('tin-registration');
   const stepKey = 'receive-tin'; // best_effort
   for (let i = 0; i < PROMOTION_THRESHOLD; i++) {
-    await db.run(
-      `INSERT INTO step_reports
-         (process_slug, region, step_key, user_id, actual_wait_estimate, office_location, requirement_waived, note, moderation_status, created_at)
-       VALUES (?, 'bahir_dar', ?, 999, 5, 'Test', 0, 'test', 'approved', ?)`,
-      ['tin-registration', stepKey, new Date().toISOString()]
-    );
+    await addReport('tin-registration', stepKey, { region: 'bahir_dar' });
   }
   const p = await resolveProcessWithPromotion(row, { region: 'addis_ababa' });
   const step = p.steps.find((s) => s.key === stepKey);

@@ -104,12 +104,22 @@ router.delete('/:id', wrap(async (req, res) => {
 }));
 
 // ── serving decrypted bytes (owner-only gate in app.js) ──────────────
+//
+// Documents are readable by their owner and only their owner. There is
+// deliberately NO moderator override: no moderation task in Meredaja
+// (verifying process steps, reviewing flagged reports) requires viewing
+// a user's private ID/lease documents, so a blanket moderator bypass
+// would be a standing backdoor with no legitimate use. If a future
+// feature (e.g. a formal appeal/dispute) needs moderator document
+// review, it must be a specific request tied to a specific document and
+// logged the same way step_verification_log records actions — not a
+// blanket permission.
 export async function serveDocument(req, res) {
   const docId = req.params.id;
   const doc = await db.get('SELECT * FROM documents WHERE id = ?', [docId]);
   if (!doc) return res.status(404).json({ error: 'Not found', code: 'not_found' });
   if (!req.user) return res.status(401).json({ error: 'Not authenticated', code: 'unauthorized' });
-  if (doc.user_id !== req.user.id && !req.user.is_moderator) {
+  if (doc.user_id !== req.user.id) {
     return res.status(403).json({ error: 'Forbidden', code: 'forbidden' });
   }
   try {

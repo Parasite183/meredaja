@@ -72,8 +72,10 @@ upload access, fixed-window rate limiting) — adapted and extended with
    a note per step, dashboard with progress bars.
 3. **Document vault** — upload ID/lease/photos once (images + PDF only, 10 MB
    cap, **magic-byte verified**, **AES-256-GCM encrypted at rest**, owner-only
-   access) and attach the same document to steps of any number of checklists.
-   A "delete everything" control lives in Settings.
+   access with **no moderator override** — no moderation task needs to view
+   a user's private documents, so there is deliberately no backdoor) and
+   attach the same document to steps of any number of checklists. A "delete
+everything" control lives in Settings.
 4. **Community reality-check layer** — short reports per step (actual wait,
    office/branch, requirement-waived flag, note), aggregated into a visible
    signal ("12 people reported this step took 2–4 weeks"), with flagging and
@@ -130,7 +132,7 @@ meredaja/
 | POST | `/api/checklists/:id/attachments` | attach vault doc to a step |
 | POST | `/api/documents` (multipart) | upload (verified + encrypted) |
 | GET  | `/api/documents` · DELETE `/api/documents/:id` | vault |
-| GET  | `/uploads/documents/:id.enc` | decrypted bytes, owner-only |
+| GET  | `/uploads/documents/:id.enc` | decrypted bytes, owner-only (no moderator override) |
 | POST | `/api/reports` · `/api/reports/:id/flag` | community reports |
 | GET  | `/api/moderation/reports` · POST `/api/moderation/reports/:id` | mod queue |
 | DELETE | `/api/me` | delete everything |
@@ -176,15 +178,24 @@ that, the API applies live levels with this precedence:
 
 1. **`verified`** — a moderator marked the step field-verified
    (`step_verifications` row; outranks everything)
-2. **`community`** — auto-promoted: a `best_effort` step with **3 approved
-   community reports** for its (process, region, step) —
-   `PROMOTION_THRESHOLD` in `server/src/processes.js`
+2. **`community`** — auto-promoted: a `best_effort` step with **3
+   distinct people** who submitted approved reports for its (process,
+   region, step) — `PROMOTION_THRESHOLD` in `server/src/processes.js`
 3. the static tag from the JSON
+
+Promotion counts **distinct reporters** (`COUNT(DISTINCT user_id)`), not
+report volume — a step is "corroborated by N different people", and a
+single account spamming reports can never promote a step on its own. Two
+companion guards enforce this at the source: the report submission limit
+is per account per (process, region, step) — **one report per step per
+24h** — so a single account doesn't even register multiple times against
+the same step (see `REPORT_LIMITS.reportStep` in `server/src/rate-limit.js`).
 
 This is how the reality-check layer upgrades content without anyone editing
 JSON: the badge becomes live evidence instead of a static tag. Promotion is
 upward-only (`official`/`verified` are never downgraded), counts only
-`approved` reports (flagged/hidden don't count), and is region-scoped.
+`approved` reports from distinct people (flagged/hidden don't count), and
+is region-scoped.
 
 Moderators drive the final step from the **Moderation page**: a "Verified
 steps" section lists every community-promoted step, and a moderator who
@@ -206,11 +217,14 @@ human), with a full audit trail.
   i18n.
 - Process content structure: steps, required documents, offices, timelines,
   rejection reasons, region variants — all functional and editable.
-- The demo user's checklist state, sample reports and sample vault document
+- The demo users' checklist state, sample reports and sample vault document
   are real rows exercising the real flows (the sample PNG is a generated
-  1×1 image, encrypted on disk like any upload). The seeded reports on the
-  trade-license `prepare-lease` step cross the promotion threshold, so the
-  demo visibly shows a `best_effort` step auto-promoted to `community`.
+  1×1 image, encrypted on disk like any upload). Three demo accounts exist
+  so the seeded reports come from **distinct reporters**: the three reports
+  on the trade-license `prepare-lease` step are from three different people
+  (Abebe, Chaltu, Biruk), which is exactly what crosses the promotion
+  threshold — so the demo visibly shows a `best_effort` step auto-promoted
+  to `community` under the distinct-reporter rule.
 
 **Seeded placeholder / best-effort (flagged honestly):**
 - **Process content is best-effort reference material**, written from public
@@ -222,9 +236,10 @@ human), with a full audit trail.
 - Non-Addis region variants (Bahir Dar, Hawassa, Mekelle, Dire Dawa…) are
   scaffolded with reasonable office names and notes — clearly not field-
   verified. Only Addis Ababa is treated as "fully populated".
-- Demo user `+251911000001` ("Demo User (Abebe)", a moderator so the
-  moderation queue is testable) and its 2 in-progress checklists are seed
-  data. OTP is console-printed in dev — no real SMS is sent.
+- Demo users `+251911000001` ("Demo User (Abebe)", a moderator so the
+  moderation queue is testable), `+251911000002` (Chaltu) and
+  `+251911000003` (Biruk) and the 2 in-progress checklists are seed data.
+  OTP is console-printed in dev — no real SMS is sent.
 - `scripts/browser-smoke.mjs` is a dev harness (needs Chrome + the sibling
   `zemen` checkout for puppeteer-core); it is not part of the product.
 

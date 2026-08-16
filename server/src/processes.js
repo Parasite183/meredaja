@@ -112,10 +112,11 @@ const CONFIDENCE_LEVELS = ['verified', 'official', 'community', 'best_effort'];
 
 /**
  * A step whose static confidence is best_effort gets auto-promoted to
- * community once this many APPROVED community reports exist for its
- * (process, region, step). The community layer is the product's
- * reality-check mechanism — this is how best-effort content earns a
- * badge upgrade without an editor touching the JSON.
+ * community once this many DISTINCT people (COUNT(DISTINCT user_id), not
+ * report rows) have submitted APPROVED reports for its (process, region,
+ * step). Counting distinct reporters — not report volume — is what makes
+ * the badge mean "corroborated by N different people": a single account
+ * spamming the same step must never be able to promote it alone.
  */
 export const PROMOTION_THRESHOLD = 3;
 
@@ -157,7 +158,8 @@ export function isValidRegion(region) {
  *   1. `verified` — a moderator has field-verified this step
  *      (step_verifications row). Outranks everything.
  *   2. `community` — auto-promoted: a best_effort step with >=
- *      PROMOTION_THRESHOLD approved reports for this (process, region).
+ *      PROMOTION_THRESHOLD distinct reporters (COUNT(DISTINCT user_id)
+ *      of approved reports) for this (process, region).
  *   3. the static tag from the process JSON.
  *
  * The scale is upward-only: moderation never downgrades a step, and
@@ -168,7 +170,7 @@ export async function resolveProcessWithPromotion(row, { region, locale = 'en' }
   const chosenRegion = region || data.default_region || 'addis_ababa';
   const [counts, verifications] = await Promise.all([
     db.all(
-      `SELECT step_key, COUNT(*) AS n
+      `SELECT step_key, COUNT(DISTINCT user_id) AS n
        FROM step_reports
        WHERE process_slug = ? AND region = ? AND moderation_status = 'approved'
        GROUP BY step_key`,

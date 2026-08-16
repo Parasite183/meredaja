@@ -74,7 +74,8 @@ export function buildApp() {
     });
   }
 
-  // Private uploads: access-gated (owner/moderator only), decrypted in
+  // Private uploads: access-gated to the owner only (no moderator
+  // override — see uploads.js / routes/documents.js), decrypted in
   // memory at request time. Backed by local disk on Node and R2 on
   // Workers (uploads.js switches automatically).
   app.use('/uploads', authMiddleware, requireUploadAccess(), (req, res, next) => {

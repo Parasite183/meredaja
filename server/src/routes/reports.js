@@ -43,7 +43,7 @@ function aggregate(reports) {
 }
 
 // ── submit a report ──────────────────────────────────────────────────
-router.post('/reports', authMiddleware, REPORT_LIMITS.reportUser, REPORT_LIMITS.reportIp, wrap(async (req, res) => {
+router.post('/reports', authMiddleware, REPORT_LIMITS.reportStep, REPORT_LIMITS.reportUser, REPORT_LIMITS.reportIp, wrap(async (req, res) => {
   const processSlug = String(req.body?.process_slug || '').trim();
   const region = String(req.body?.region || '').trim();
   const stepKey = String(req.body?.step_key || '').trim();
@@ -133,7 +133,7 @@ router.get('/moderation/steps', authMiddleware, requireModerator, wrap(async (re
     for (const region of regions) {
       const [counts, verifications] = await Promise.all([
         db.all(
-          `SELECT step_key, COUNT(*) AS n
+          `SELECT step_key, COUNT(DISTINCT user_id) AS n
            FROM step_reports
            WHERE process_slug = ? AND region = ? AND moderation_status = 'approved'
            GROUP BY step_key`,

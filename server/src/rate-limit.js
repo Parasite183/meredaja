@@ -66,6 +66,12 @@ export const AUTH_LIMITS = {
 };
 
 export const REPORT_LIMITS = {
+  // Per account per (process, region, step) in a 24h window: at most
+  // ONE report per step per day. This is the source-level guard behind
+  // distinct-reporter promotion — a single account spamming the same
+  // step doesn't even register multiple times, so it can never push a
+  // step toward 'community' on its own.
+  reportStep: rateLimit({ name: 'report-step', windowMs: 24 * 60 * 60_000, max: 1, keyFn: (req) => (req.user?.id && req.body?.process_slug && req.body?.region && req.body?.step_key ? `report-step:${req.user.id}:${String(req.body.process_slug)}:${String(req.body.region)}:${String(req.body.step_key)}` : null) }),
   // Per account per process (24h window): a handful of reports per
   // process keeps the reality-check layer honest.
   reportUser: rateLimit({ name: 'report-user', windowMs: 24 * 60 * 60_000, max: 5, keyFn: (req) => (req.user?.id && req.body?.process_slug ? `report:${req.user.id}:${String(req.body.process_slug)}` : null) }),
