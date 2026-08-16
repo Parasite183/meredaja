@@ -33,6 +33,48 @@ function tinyPng() {
   );
 }
 
+/**
+ * Seed the demo user's sample vault document (+ its reuse-everywhere
+ * attachments) if it doesn't already exist. Idempotent and safe to run
+ * on every boot: it skips when the demo user has no document yet and
+ * does nothing at all otherwise.
+ *
+ * Runs at worker boot (app.js ensureDb) so the demo vault doc also
+ * lands in production — the D1 SQL dump can't carry the encrypted
+ * blob, so the worker writes it to R2 itself with the real key.
+ */
+export async function seedDemoVault() {
+  const user = await db.get('SELECT id FROM users WHERE phone = ?', [DEMO_USER.phone]);
+  if (!user) return;
+  const existing = await db.get('SELECT id FROM documents WHERE user_id = ? AND file_name = ?', [user.id, 'sample-address-proof.png']);
+  if (existing) return;
+
+  const png = tinyPng();
+  const { lastId: docId } = await db.run(
+    `INSERT INTO documents (user_id, type, file_name, file_path, file_size, mime_type, sha256, uploaded_at)
+     VALUES (?, 'address_proof', 'sample-address-proof.png', '', ?, 'image/png', ?, ?)`,
+    [user.id, png.length, sha256(png), new Date().toISOString()]
+  );
+  const filePath = await writeEncryptedDocument(docId, png);
+  await db.run('UPDATE documents SET file_path = ? WHERE id = ?', [filePath, docId]);
+
+  // Attach to the demo checklists (by slug, not id — D1 ids may differ
+  // from the local seed). Same document on two checklists = the
+  // upload-once / reuse-everywhere flow.
+  const cl1 = await db.get('SELECT id FROM user_checklists WHERE user_id = ? AND process_slug = ?', [user.id, 'trade-license']);
+  const cl2 = await db.get('SELECT id FROM user_checklists WHERE user_id = ? AND process_slug = ?', [user.id, 'business-name']);
+  const attach = (clId, stepKey) =>
+    clId
+      ? db.run(
+          `INSERT OR IGNORE INTO document_attachments (document_id, user_checklist_id, step_key, created_at)
+           VALUES (?, ?, ?, ?)`,
+          [docId, clId, stepKey, new Date().toISOString()]
+        )
+      : Promise.resolve();
+  await attach(cl1?.id, 'prepare-lease');
+  await attach(cl2?.id, 'check-availability');
+}
+
 export async function runSeed() {
   // ── process library ────────────────────────────────────────────────
   await syncProcessLibrary();
@@ -80,26 +122,7 @@ export async function runSeed() {
   await mkStatus(cl2, 'collect-certificate', 'todo', 'Told to come back next week for the certificate.', 3);
 
   // ── sample vault document (PNG) + attachments to both checklists ───
-  const png = tinyPng();
-  const { lastId: docId } = await db.run(
-    `INSERT INTO documents (user_id, type, file_name, file_path, file_size, mime_type, sha256, uploaded_at)
-     VALUES (?, 'address_proof', 'sample-address-proof.png', '', ?, 'image/png', ?, ?)`,
-    [userId, png.length, sha256(png), daysAgo(4)]
-  );
-  const filePath = await writeEncryptedDocument(docId, png);
-  await db.run('UPDATE documents SET file_path = ? WHERE id = ?', [filePath, docId]);
-
-  // Same document attached to a step in BOTH checklists → reuse-once-everywhere.
-  await db.run(
-    `INSERT INTO document_attachments (document_id, user_checklist_id, step_key, created_at)
-     VALUES (?, ?, 'prepare-lease', ?)`,
-    [docId, cl1, daysAgo(4)]
-  );
-  await db.run(
-    `INSERT INTO document_attachments (document_id, user_checklist_id, step_key, created_at)
-     VALUES (?, ?, 'check-availability', ?)`,
-    [docId, cl2, daysAgo(4)]
-  );
+  await seedDemoVault();
 
   // ── sample community step reports (approved) ───────────────────────
   const REPORTS = [

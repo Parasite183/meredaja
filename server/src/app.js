@@ -8,6 +8,7 @@ import { serverRoot, config, validateConfig } from './config.js';
 import { initDb } from './db.js';
 import { initSchema } from './schema.js';
 import { syncProcessLibrary } from './processes.js';
+import { seedDemoVault } from './seed.js';
 import { authMiddleware } from './auth.js';
 import { requireUploadAccess } from './uploads.js';
 import authRoutes from './routes/auth.js';
@@ -48,6 +49,9 @@ export function buildApp() {
         await initDb();
         await initSchema();
         await syncProcessLibrary();
+        // Demo vault doc (encrypted blob lives in R2 — the D1 SQL dump
+        // can't carry it, so the worker seeds it itself). Idempotent.
+        await seedDemoVault();
       })().catch((err) => {
         dbInitPromise = null; // allow a retry on the next request
         throw err;

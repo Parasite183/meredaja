@@ -7,8 +7,10 @@
 // statements.
 //
 // The seed's sample vault document (and its attachments) are NOT
-// dumped — its encrypted blob lives only on the local disk, so the
-// remote vault starts empty and nothing 404s.
+// dumped — its encrypted blob can't travel through SQL. The worker
+// seeds it into R2 at boot instead (seedDemoVault in app.js), so
+// the demo vault is populated on Workers with the real enc key and
+// the dump never references a blob that doesn't exist.
 //
 //   Usage:  node server/scripts/dump-seed-sql.mjs
 //           npx wrangler d1 execute meredaja-db --remote --file=server/seed-d1.sql
