@@ -62,6 +62,13 @@ async function main() {
   // land on first deploy and then persist — real users, their
   // checklists, and their step reports are never wiped by a re-deploy.
   // sessions / otp_codes are transient and not part of the seed.
+  //
+  // The demo user's reports ARE refreshed: INSERT OR IGNORE would skip
+  // them forever once their ids exist remotely, so drop that user's
+  // reports first (subquery by phone — never touches real users).
+  lines.push("DELETE FROM step_reports WHERE user_id = (SELECT id FROM users WHERE phone = '+251911000001');");
+  lines.push('');
+
   for (const t of ['processes', 'users', 'user_checklists', 'checklist_step_status', 'step_reports']) {
     // Seed only the LATEST version of each process — older versions are
     // history rows that nothing resolves against (lookups use
